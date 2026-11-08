@@ -28,7 +28,7 @@
   --display:"Overpass","Helvetica Neue",Arial,sans-serif;
   --body:"Overpass","Helvetica Neue",Arial,sans-serif;
   --mono:"Overpass Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
-  --step--1:.875rem; --step-0:1.0625rem; --step-1:1.3rem; --step-2:1.75rem; --step-3:clamp(2.2rem,4.4vw,4.2rem);
+  --step--1:.875rem; --step-0:1.0625rem; --text-compact:.97rem; --step-1:1.3rem; --step-2:1.75rem; --step-3:clamp(2.2rem,4.4vw,4.2rem);
   --gap:clamp(1rem,2vw,1.5rem);
   --wrap:1240px;
 }
@@ -56,16 +56,19 @@ html{scrollbar-color:var(--muted) var(--ground-2)}
 .wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
 p{margin:0}
+p,dd,td.res,.proofs li,.skill-list li{text-wrap:pretty}
+h4{text-wrap:balance}
+.fig{font-family:var(--mono);font-weight:600;font-size:.94em;letter-spacing:-.01em;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
 
 /* ---------- signage strip ---------- */
 .strip-top{background:var(--sign-bg);color:var(--sign-fg)}
 .strip-top .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1.5rem;padding-block:.8rem}
 .ident{display:flex;align-items:center;gap:.75rem;min-width:0}
-.roundel{flex:none;width:1.7rem;height:2.7rem;border-radius:.85rem;background:var(--sign-fg);display:grid;align-content:center;justify-items:center;gap:.25rem}
+.roundel{flex:none;width:1.7rem;height:2.7rem;border-radius:999px;background:var(--sign-fg);display:grid;align-content:center;justify-items:center;gap:.25rem}
 .roundel i{display:block;width:.8rem;height:.8rem;border-radius:50%}
 .ident-name{font:800 1.15rem/1.1 var(--display);letter-spacing:.01em}
 .ident-role{font-size:var(--step--1);opacity:.85}
-.top-right{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.25rem}
+.top-right{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.75rem 1.25rem}
 .langs{display:flex;border:2px solid var(--sign-fg);border-radius:4px;overflow:hidden}
 .langs button{appearance:none;border:0;background:transparent;color:var(--sign-fg);font:600 .95rem/1 var(--mono);padding:.5rem .7rem;cursor:pointer;letter-spacing:.06em}
 .langs button[aria-pressed="true"]{background:var(--sign-fg);color:var(--sign-bg)}
@@ -86,40 +89,48 @@ p{margin:0}
 .portrait strong{color:var(--ink);font-size:1.05rem}
 .badges{list-style:none;margin:1.5rem 0 .5rem;padding:0;display:flex;flex-wrap:wrap;gap:1.5rem 2rem}
 .badges li{display:grid;justify-items:center;gap:.4rem;font:600 .8rem/1 var(--mono)}
-.badges img{width:7rem;height:7rem;object-fit:contain;background:#fff;border-radius:.9rem;padding:.5rem;box-shadow:inset 0 0 0 1px var(--rule)}
+.badges img{width:7rem;height:7rem;object-fit:contain;background:#fff;border-radius:6px;padding:.5rem;box-shadow:inset 0 0 0 1px var(--rule)}
 .log-more{margin:1.25rem 0 0}
 .cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,26rem),1fr));gap:2.5rem 3rem;margin-top:1.5rem}
 .case-head{display:flex;align-items:center;gap:.6rem;font-size:var(--step-1);font-weight:800;padding-bottom:.5rem;border-bottom:4px solid var(--c)}
-.case-stat{font:600 .85rem/1.5 var(--mono);color:var(--ink);margin:.75rem 0 .25rem}
+.case-stat{font:500 .85rem/1.5 var(--mono);color:var(--muted);margin:.75rem 0 .5rem}
 .case-list{list-style:none;margin:0;padding:0;counter-reset:case}
-.case-list li{counter-increment:case;position:relative;padding:1rem 0 1rem 2.6rem;border-bottom:1px solid var(--rule)}
-.case-list li::before{content:counter(case,decimal-leading-zero);position:absolute;left:0;top:1.05rem;font:600 .8rem/1 var(--mono);color:var(--c)}
-.case-list h4{font-size:1rem;font-weight:800;margin:0 0 .3rem}
-.case-list p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.5}
-.case-also{font-size:.95rem;font-weight:800;margin:1.5rem 0 0}
-.case-col .chips li{font-size:.84rem;font-weight:500;padding:.5rem .75rem;box-shadow:inset 0 0 0 .1rem var(--tech)}
+.case-list li{position:relative;padding:1.1rem 0 1.15rem 2.4rem;border-bottom:1px solid var(--rule);isolation:isolate}
+.case-list li::after{content:"";position:absolute;left:.55rem;top:0;bottom:0;width:.3rem;background:var(--c);z-index:-1}
+.case-list li:first-child::after{top:1.5rem}
+.case-list li:last-child::after{bottom:auto;height:1.5rem}
+.case-list li::before{content:"";position:absolute;left:.25rem;top:1.3rem;width:.85rem;height:.85rem;border-radius:50%;background:var(--station);box-shadow:0 0 0 .2rem var(--ink)}
+.case-list h4{font-size:var(--step-0);font-weight:800;line-height:1.3;margin:0 0 .35rem}
+.case-list p{margin:0;color:var(--muted);font-size:var(--text-compact);line-height:1.55;max-width:68ch}
+.case-also{font-size:.9rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:1.75rem 0 0}
+.case-col .chips li{font-size:var(--step--1);font-weight:600;padding:.5rem .75rem;box-shadow:inset 0 0 0 .1rem var(--tech)}
 .log-more .repo-link{margin-left:0}
 .story{margin-top:.6rem}
-.story summary{cursor:pointer;font-weight:700;font-size:.9rem;color:var(--c);width:fit-content}
-.story summary:hover{text-decoration:underline;text-underline-offset:.2em}
-.story dl{margin:.6rem 0 0;padding-left:.9rem;border-left:3px solid var(--c);display:grid;gap:.15rem}
-.story dt{font:600 .72rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin-top:.45rem}
-.story dd{margin:0;color:var(--muted);font-size:.93rem;line-height:1.5}
+.story summary{cursor:pointer;font-weight:800;font-size:var(--step--1);color:var(--ink);width:fit-content;text-decoration:underline;text-decoration-color:var(--c);text-decoration-thickness:2px;text-underline-offset:.3em}
+.story summary::marker{color:var(--c)}
+.story summary:hover{text-decoration-thickness:4px}
+.story dl{position:relative;margin:.9rem 0 0;padding-left:1.5rem;display:grid;gap:.1rem}
+.story dl::before{content:"";position:absolute;left:.3rem;top:.35rem;bottom:.6rem;width:1px;background:var(--rule)}
+.story dt{position:relative;font:600 .72rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink);margin-top:.75rem}
+.story dt:first-child{margin-top:0}
+.story dt::before{content:"";position:absolute;left:-1.5rem;top:.2rem;width:.6rem;height:.6rem;border-radius:50%;background:var(--station);box-shadow:0 0 0 .15rem var(--c)}
+.story dd{margin:.2rem 0 0;color:var(--ink);font-size:var(--text-compact);line-height:1.55;max-width:66ch}
 html[data-mode="exec"] [data-detail]{display:none!important}
 html[data-mode="exec"] .case-list li:nth-child(n+4){display:none}
+html[data-mode="exec"] .case-list li:nth-child(3)::after{bottom:auto;height:1.5rem}
 html:not([data-mode="exec"]) .exec-only{display:none}
 .full-cta{margin-block:1rem 0;padding-block:2rem;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);display:grid;gap:.8rem;justify-items:start}
-.full-cta h2{font-size:var(--step-2,1.6rem);font-weight:800}
+.full-cta h2{font-size:var(--step-2);font-weight:800}
 .full-cta p{margin:0;color:var(--muted);max-width:60ch}
-.cta-btn{appearance:none;border:0;cursor:pointer;background:var(--ink);color:var(--ground);font:800 1.05rem/1 var(--display,inherit);padding:1rem 1.4rem;border-radius:.3rem;margin-top:.4rem}
+.cta-btn{appearance:none;border:0;cursor:pointer;background:var(--ink);color:var(--ground);font:800 1.05rem/1 var(--display);padding:1rem 1.4rem;border-radius:4px;margin-top:.4rem}
 .cta-btn:hover{background:var(--tech);color:var(--on-line)}
-.modes button{font-family:var(--body,inherit);letter-spacing:0;text-transform:none}
-.top-right{flex-wrap:wrap;justify-content:flex-end}
-.repo-link{display:inline-block;margin-left:.75rem;font-weight:700;color:var(--tech);text-underline-offset:.2em}
+.cta-btn:active,.more:active{transform:translateY(1px)}
+.modes button{font-family:var(--body);letter-spacing:0}
+.repo-link{display:inline-block;margin-left:.75rem;font-weight:800;color:var(--tech);text-underline-offset:.2em}
 .lede strong{color:var(--ink);font-weight:600}
 .legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;font-size:var(--step--1);font-weight:600}
 .legend li{display:flex;align-items:center;gap:.55rem}
-.swatch{display:inline-block;width:2.2rem;height:.55rem;border-radius:.3rem;background:var(--c)}
+.swatch{display:inline-block;width:2.2rem;height:.55rem;border-radius:999px;background:var(--c)}
 .swatch.hollow{background:transparent;box-shadow:inset 0 0 0 .18rem var(--c)}
 
 .map-wrap{overflow-x:auto}
@@ -177,7 +188,7 @@ html:not([data-mode="exec"]) .exec-only{display:none}
 .proofs{list-style:none;margin:0;padding:0;display:grid;gap:.65rem}
 .proofs li{display:grid;gap:.2rem;font-size:.97rem;line-height:1.45}
 .tier{display:inline-flex;align-items:center;gap:.4rem;font:600 .72rem/1 var(--mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
-.tier::before{content:"";width:1.3rem;height:.35rem;border-radius:.2rem;background:var(--ink)}
+.tier::before{content:"";width:1.3rem;height:.35rem;border-radius:999px;background:var(--ink)}
 .tier.lab::before{background:transparent;box-shadow:inset 0 0 0 .12rem var(--ink)}
 .tier.academic::before{background:repeating-linear-gradient(90deg,var(--ink) 0 .3rem,transparent .3rem .5rem)}
 .tier.tool::before{width:.6rem;background:var(--muted)}
@@ -202,13 +213,12 @@ td.where{white-space:nowrap}
 .skill-list li{padding:.45rem 0;border-bottom:1px solid var(--rule);font-size:.97rem;line-height:1.4}
 .chips{list-style:none;margin:.6rem 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem}
 .chips li{font-size:.9rem;font-weight:600;line-height:1.2;padding:.55rem .85rem;border-radius:999px;box-shadow:inset 0 0 0 .14rem var(--cert)}
-.stack-h{font-size:var(--step-1);font-weight:800;margin:3rem 0 0}
+.stack-h{display:flex;align-items:center;gap:.6rem;font-size:var(--step-1);font-weight:800;margin:3rem 0 0}
 .stack{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:1.75rem 2.5rem;margin-top:1.25rem}
 .stack h4{font-size:.95rem;font-weight:800;padding-bottom:.4rem;border-bottom:2px solid var(--ink);margin:0}
 .stack .chips li{font-size:.84rem;font-weight:500;padding:.5rem .75rem}
 .stack .chips.hands li{background:var(--cert);color:var(--on-line);box-shadow:none;font-weight:600}
 .stack .chips.lab li{box-shadow:inset 0 0 0 .1rem var(--muted);color:var(--ink)}
-.stack-h{display:flex;align-items:center;gap:.6rem}
 .tier-key{display:inline-block;width:1.6rem;height:.9rem;border-radius:999px}
 .tier-key.hands{background:var(--cert)}
 .tier-key.lab{box-shadow:inset 0 0 0 .14rem var(--muted)}
@@ -250,7 +260,7 @@ td.line .bullet{width:.95rem;height:.95rem}
 .terminus{margin-top:clamp(3rem,7vw,5rem);background:var(--sign-bg);color:var(--sign-fg)}
 .terminus .wrap{padding-block:clamp(2.5rem,6vw,4rem);display:grid;gap:1.25rem}
 .terminus h2{font-size:var(--step-3);font-weight:800;letter-spacing:-.03em;line-height:1.02;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.terminus .cap-mark{width:2.6rem;height:4.2rem;border-radius:1.3rem;border:.35rem solid var(--sign-fg);flex:none;position:relative}
+.terminus .cap-mark{width:2.6rem;height:4.2rem;border-radius:999px;border:.35rem solid var(--sign-fg);flex:none;position:relative}
 .terminus .cap-mark::before,.terminus .cap-mark::after{content:"";position:absolute;left:50%;width:1rem;height:1rem;border-radius:50%;transform:translateX(-50%)}
 .terminus .cap-mark::before{top:.45rem;background:var(--tech)}
 .terminus .cap-mark::after{bottom:.45rem;background:var(--cust)}
@@ -296,7 +306,7 @@ footer .wrap{padding-block:1.1rem;display:flex;flex-wrap:wrap;justify-content:sp
   .st-btn{appearance:none;position:relative;display:grid;grid-template-columns:2.6rem 1fr;align-items:center;gap:.25rem .5rem;width:100%;text-align:left;background:transparent;border:0;color:inherit;font:inherit;padding:.65rem 0;cursor:pointer}
   .branch .st-btn{grid-template-columns:1.55rem 1fr}
   .st-btn .dot{justify-self:center;width:1.15rem;height:1.15rem;border-radius:50%;background:var(--station);box-shadow:0 0 0 .22rem var(--ink);position:relative;z-index:1}
-  .st.both .st-btn .dot,.st.end .st-btn .dot{width:1.7rem;height:2.4rem;border-radius:.85rem}
+  .st.both .st-btn .dot,.st.end .st-btn .dot{width:1.7rem;height:2.4rem;border-radius:999px}
   .st-btn[aria-pressed="true"] .dot{background:var(--ink)}
   .st-name{font-weight:800;line-height:1.2}
   .st-when{grid-column:2;font:600 .85rem/1.3 var(--body);color:var(--muted)}
@@ -802,7 +812,7 @@ var SKILLS = [
     L("Windows internals and services","Internos y servicios de Windows","Internos e serviços do Windows"),
     L("Linux administration","Administración de Linux","Administração de Linux"),
     L("Active Directory, LDAP and Kerberos","Active Directory, LDAP y Kerberos","Active Directory, LDAP e Kerberos"),
-    L("SMB, MSSQL, WinRM and SNMP"),
+    L("SMB, MSSQL, WinRM and SNMP","SMB, MSSQL, WinRM y SNMP","SMB, MSSQL, WinRM e SNMP"),
     L("Hashing and authentication protocols","Hashing y protocolos de autenticación","Hashing e protocolos de autenticação")
   ]},
   {n:L("Domains","Dominios","Domínios"), items:[
@@ -834,8 +844,8 @@ var STACK = [
   {tier:"lab", n:L("Application servers and DevOps","Servidores de aplicación y DevOps","Servidores de aplicação e DevOps"), items:["Apache • nginx • IIS","Tomcat","Jetty","Jenkins","GitLab","Gitea • GitBucket","Subversion","Docker • LXD","SaltStack • ZeroMQ","ZooKeeper Exhibitor","Supervisor","Ansible","MinIO","HashiCorp Vault","Apache OFBiz"]},
   {tier:"lab", n:L("Monitoring, admin and comms","Monitoreo, administración y comunicaciones","Monitoramento, administração e comunicações"), items:["Nagios XI • NSCA","Zabbix","PRTG","Webmin","NSClient++","Rocket.Chat","Mattermost","Openfire • XMPP","Asterisk • FreePBX • Elastix","FreeSWITCH","Mercury mail","OpenPLC","Plex • Pi-hole"]},
   {tier:"lab", n:L("Databases and data stores","Bases de datos y almacenamiento","Bancos de dados e armazenamento"), items:["MySQL • MariaDB","PostgreSQL","Microsoft SQL Server","Oracle (TNS)","MongoDB","Redis","SQLite","H2","Cassandra"]},
-  {tier:"lab", n:L("Other operating systems","Otros sistemas operativos","Outros sistemas operacionais"), items:["Windows XP and 7","Windows IoT Core","CentOS","FreeBSD","NetBSD","Solaris","pfSense","Raspberry Pi OS"]},
-  {tier:"lab", n:L("Binary, reversing and forensics","Binarios, reversing y forense","Binários, reversing e forense"), items:["Stack buffer overflows","ret2libc • ROP","Java and .NET decompiling","Memory dumps","Packet captures","VHD backups","PST • MDB files","Cisco config passwords","Git history","Steganography","Esoteric encodings"]}
+  {tier:"lab", n:L("Other operating systems","Otros sistemas operativos","Outros sistemas operacionais"), items:["Windows XP • 7","Windows IoT Core","CentOS","FreeBSD","NetBSD","Solaris","pfSense","Raspberry Pi OS"]},
+  {tier:"lab", n:L("Binary, reversing and forensics","Binarios, reversing y forense","Binários, reversing e forense"), items:["Stack buffer overflows","ret2libc • ROP","Java • .NET decompiling","Memory dumps","Packet captures","VHD backups","PST • MDB files","Cisco config passwords","Git history","Steganography","Esoteric encodings"]}
 ];
 
 var CASES = {
@@ -861,7 +871,7 @@ var CASES = {
     {h:L("Firewall offline, back over console","Firewall sin internet, recuperado por consola","Firewall sem internet, recuperado pelo console"),
      t:L("When a bad route cut a FortiGate off, I guided the customer in over console, set up a TFTP server when needed, and fixed the static routes live.","Cuando una ruta mal configurada dejaba un FortiGate sin conectividad, guiaba al cliente por consola, montaba un servidor TFTP cuando hacía falta y corregía las rutas estáticas en vivo.","Quando uma rota mal configurada deixava um FortiGate sem conectividade, guiava o cliente pelo console, montava um servidor TFTP quando necessário e corrigia as rotas estáticas ao vivo.")}
   ],
-  supportAlso:["QoS for VoIP over SD-WAN","MSS for dropping downloads","Asymmetric routing in cloud","LDAP group mapping","IPS in alert mode first","FortiGuard re-rating","FortiGuard connectivity","FortiToken recovery","FortiClient EMS certificates","Explicit proxy","FortiLink onboarding","VLAN tagging","FortiSwitch firmware","Local-in policies","DNS and DoH","FortiAuthenticator","FortiWeb"],
+  supportAlso:[L("QoS for VoIP over SD-WAN","QoS para VoIP sobre SD-WAN","QoS para VoIP sobre SD-WAN"),L("MSS for dropping downloads","MSS para descargas que se cortan","MSS para downloads que caem"),L("Asymmetric routing in cloud","Ruteo asimétrico en la nube","Roteamento assimétrico na nuvem"),L("LDAP group mapping","Mapeo de grupos LDAP","Mapeamento de grupos LDAP"),L("IPS in alert mode first","IPS primero en modo alerta","IPS primeiro em modo alerta"),L("FortiGuard re-rating","Recategorización en FortiGuard","Recategorização no FortiGuard"),L("FortiGuard connectivity","Conectividad con FortiGuard","Conectividade com FortiGuard"),L("FortiToken recovery","Recuperación de FortiToken","Recuperação de FortiToken"),L("FortiClient EMS certificates","Certificados de FortiClient EMS","Certificados do FortiClient EMS"),L("Explicit proxy","Proxy explícito","Proxy explícito"),L("FortiLink onboarding","Alta de switches con FortiLink","Integração de switches com FortiLink"),L("VLAN tagging","Etiquetado de VLAN","Marcação de VLAN"),L("FortiSwitch firmware","Firmware de FortiSwitch","Firmware do FortiSwitch"),L("Local-in policies","Políticas local-in","Políticas local-in"),L("DNS and DoH","DNS y DoH","DNS e DoH"),L("FortiAuthenticator","FortiAuthenticator","FortiAuthenticator"),L("FortiWeb","FortiWeb","FortiWeb")],
   csm:[
     {h:L("Red to green, with the C-level in the room","De rojo a verde, con el C-level en la sala","Do vermelho ao verde, com o C-level na sala"),
      t:L("Most of my red accounts had gone months without post-sales contact, and their admins had given up on parts of the platform with no business goal behind it. I set a clear why, business objectives and a how, and kept my cadences tied to their roadmaps. About 60% of my named accounts moved from red to green, and QBRs with C-level and VPs made most renewals easier.","La mayoría de mis cuentas en rojo llevaban meses sin contacto de post-venta, y sus admins habían tirado la toalla con partes de la plataforma, sin un objetivo de negocio detrás. Establecí un porqué claro, objetivos de negocio y un cómo, y mantuve mis cadencias atadas a sus roadmaps. Cerca del 60% de mis cuentas nombradas pasó de rojo a verde, y los QBRs con C-level y VPs facilitaron la mayoría de las renovaciones.","A maioria das minhas contas em vermelho estava há meses sem contato de pós-venda, e seus admins tinham desistido de partes da plataforma, sem um objetivo de negócio por trás. Estabeleci um porquê claro, objetivos de negócio e um como, e mantive minhas cadências ligadas aos roadmaps deles. Cerca de 60% das minhas contas nomeadas passaram do vermelho ao verde, e os QBRs com C-level e VPs facilitaram a maioria das renovações."),
@@ -930,6 +940,14 @@ var lang = "en", current = "netskope";
 var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 var mobileMQ = window.matchMedia("(max-width:760px)");
 
+var FIG=/(\$?\d[\d,.]*(?:\+|k|M)?%?)/g;
+function figs(node,text){
+  text.split(FIG).forEach(function(part,i){
+    if(i%2){var b=document.createElement("span"); b.className="fig"; b.textContent=part; node.appendChild(b);}
+    else if(part) node.appendChild(document.createTextNode(part));
+  });
+  return node;
+}
 function el(tag, cls, text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;}
 function bullets(lines, small){
   var b=el("span","bullets");
@@ -982,7 +1000,7 @@ function renderStatic(){
   var rb=document.getElementById("record-body"); rb.textContent="";
   RECORD.forEach(function(r){
     var tr=el("tr");
-    tr.appendChild(el("td","res",r.res[lang])); tr.appendChild(el("td","where",r.where));
+    tr.appendChild(figs(el("td","res"),r.res[lang])); tr.appendChild(el("td","where",r.where));
     var tl=el("td","line"); tl.appendChild(bullets(r.lines)); tl.title=r.lines.map(function(l){return l==="tech"?T[lang].legTech:l==="cust"?T[lang].legCust:T[lang].certTitle;}).join(" • "); tr.appendChild(tl);
     var ts=el("td"); ts.appendChild(tierTag(r.tier)); tr.appendChild(ts);
     rb.appendChild(tr);
@@ -1010,14 +1028,14 @@ function renderStatic(){
   document.getElementById("machines-link").href="machines.html?lang="+lang;
   [["support","cases-support"],["csm","cases-csm"]].forEach(function(k){
     var ol=document.getElementById(k[1]); ol.textContent="";
-    CASES[k[0]].forEach(function(c){var li=el("li"); li.appendChild(el("h4",null,c.h[lang])); li.appendChild(el("p",null,c.t[lang]));
+    CASES[k[0]].forEach(function(c){var li=el("li"); li.appendChild(el("h4",null,c.h[lang])); li.appendChild(figs(el("p"),c.t[lang]));
       if(c.s){var d=el("details","story"); d.appendChild(el("summary",null,T[lang].storyOpen)); var dl=el("dl");
-        [["stake","stStake"],["hard","stHard"],["did","stDid"],["res","stRes"],["voice","stVoice"]].forEach(function(r){ if(c.s[r[0]]){dl.appendChild(el("dt",null,T[lang][r[1]])); dl.appendChild(el("dd",null,c.s[r[0]][lang]));} });
+        [["stake","stStake"],["hard","stHard"],["did","stDid"],["res","stRes"],["voice","stVoice"]].forEach(function(r){ if(c.s[r[0]]){dl.appendChild(el("dt",null,T[lang][r[1]])); dl.appendChild(figs(el("dd"),c.s[r[0]][lang]));} });
         d.appendChild(dl); li.appendChild(d);}
       ol.appendChild(li);});
   });
   var ca=document.getElementById("cases-support-also"); ca.textContent="";
-  CASES.supportAlso.forEach(function(x){ca.appendChild(el("li",null,x));});
+  CASES.supportAlso.forEach(function(x){ca.appendChild(el("li",null,x[lang]));});
   var lb=document.getElementById("log-body"); lb.textContent="";
   LOG.forEach(function(r){var tr=el("tr"); tr.appendChild(el("td","where",r.when[lang])); tr.appendChild(el("td","res",r.work[lang])); var ts=el("td","scale",r.scale[lang]); tr.appendChild(ts); lb.appendChild(tr);});
   var dl=document.getElementById("depot-list"); dl.textContent="";
