@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#141414"/><rect x="19" y="6" width="26" height="52" rx="13" fill="#f4f4f2"/><circle cx="32" cy="21" r="8.5" fill="#00c0e8"/><circle cx="32" cy="43" r="8.5" fill="#fa582d"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Jose Acosta Hernandez</title>
+  <rect width="64" height="64" rx="14" fill="#141414"/>
+  <path d="M8 41C8 23 20 9 36 9c5 0 9 1.5 12 4L38 30 23 55C14 52 8 47 8 41Z" fill="#00c0e8"/>
+  <path d="M23 55 34 37.5l5 3.5-9 15.5c-2.6 0-5-.5-7-1.5Z" fill="#fa582d"/>
+  <path d="M27 27c3-6 10-9 16-8l5 1.5c-4 3-6 7-6.5 12L36 41l-9.5-6.5c-1.5-2.6-1.3-5 .5-7.5Z" fill="#f4f4f2"/>
+  <path d="M43.5 19c9-1 15.5 6 15.5 15 0 7-3 12-7 15 .6-4-.6-8-3.5-10-2-1.2-4-.6-5.5.6-1.5-7-1.3-14 .5-20.6Z" fill="#fa582d"/>
+  <path d="M42 41c2-1.6 4.6-1.4 5.8.4 1.2 2 1.1 4.2-.2 6.1l-4.6.7L42 41Z" fill="#c84727"/>
+  <circle cx="36.5" cy="27.5" r="4.6" fill="#ffcb06"/>
+  <circle cx="36.5" cy="27.5" r="2.2" fill="#141414"/>
+</svg>
