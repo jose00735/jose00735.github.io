@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Practice Machines – Jose Acosta Hernandez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Overpass+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --ground:#f4f4ef; --ink:#15191c; --muted:#4a5459; --rule:#cfcfc6; --cert:#0c7f48; --on-line:#ffffff; --focus:#b35c00;
+  --body:"Overpass",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"Overpass Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--ground:#0b1a33;--ink:#eaeef5;--muted:#a9b8cf;--rule:#26395c;--cert:#45c886;--on-line:#0b1a33;--focus:#ffc233;color-scheme:dark}
+}
+:root[data-theme="dark"]{--ground:#0b1a33;--ink:#eaeef5;--muted:#a9b8cf;--rule:#26395c;--cert:#45c886;--on-line:#0b1a33;--focus:#ffc233;color-scheme:dark}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:75rem;margin:0 auto;padding-inline:max(1rem,4vw);padding-block:2rem 4rem}
+a{color:inherit;text-underline-offset:.2em}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.back{font-weight:700;font-size:.95rem}
+.sign{margin:1.5rem 0 0;background:var(--cert);color:var(--on-line);font-size:clamp(1.5rem,3vw,2rem);font-weight:800;line-height:1.2;padding:.6rem 1rem;border-radius:.2rem;display:flex;align-items:center;gap:.7rem}
+.sign i{width:1.05rem;height:1.05rem;border-radius:50%;box-shadow:inset 0 0 0 .22rem var(--on-line);flex:none}
+.intro{color:var(--muted);max-width:62ch;margin:1rem 0 0}
+.totals{display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;margin:1.5rem 0 0;padding:0;list-style:none;font:600 .9rem/1.3 var(--mono)}
+.totals b{font-size:1.6rem;font-family:var(--body);font-weight:800;margin-right:.35rem}
+.controls{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center;margin:1.75rem 0 1rem;padding-bottom:1rem;border-bottom:3px solid var(--ink)}
+.seg{display:flex;flex-wrap:wrap;gap:.4rem}
+.seg button{font:600 .85rem/1 var(--body);color:var(--ink);background:transparent;border:0;box-shadow:inset 0 0 0 .12rem var(--cert);border-radius:999px;padding:.55rem .85rem;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--cert);color:var(--on-line)}
+.search{font:500 .95rem/1 var(--body);color:var(--ink);background:transparent;border:0;box-shadow:inset 0 0 0 .12rem var(--muted);border-radius:.3rem;padding:.6rem .8rem;min-width:0;width:15rem;max-width:100%}
+.grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,13.5rem),1fr));gap:0 1.5rem}
+.grid li{display:flex;justify-content:space-between;gap:.75rem;align-items:baseline;padding:.6rem 0;border-bottom:1px solid var(--rule)}
+.grid .n{font-weight:600}
+.grid .m{font:500 .75rem/1.2 var(--mono);color:var(--muted);text-align:right;white-space:nowrap}
+.grid .prog .n::after{content:" •";color:var(--muted)}
+.empty{color:var(--muted);padding:1rem 0}
+.foot{margin-top:2rem;color:var(--muted);font-size:.85rem;max-width:62ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html" id="back">← Jose Acosta Hernandez</a>
+  <h1 class="sign"><i aria-hidden="true"></i><span data-t="title">Practice machines</span></h1>
+  <p class="intro" data-t="intro">Every retired or public practice machine I worked through while preparing for the offensive certifications. Names only: no write-ups, and no exam or Pro Lab hosts.</p>
+  <ul class="totals" id="totals"></ul>
+  <div class="controls">
+    <div class="seg" id="platforms" role="group" aria-label="Platform"></div>
+    <div class="seg" id="oses" role="group" aria-label="OS"></div>
+    <input class="search" id="q" type="search" autocomplete="off" aria-label="Search machines" placeholder="Search">
+  </div>
+  <ul class="grid" id="grid"></ul>
+  <p class="foot" data-t="foot">Platforms: HTB = Hack The Box, PG = OffSec Proving Grounds, THM = TryHackMe, TCM = TCM Security. This list is updated as I keep training.</p>
+</div>
+<script src="machines.js"></script>
+<script>
+(function(){
+var T={
+  en:{title:"Practice machines",intro:"Every retired or public practice machine I worked through while preparing for the offensive certifications. Names only: no write-ups, and no exam or Pro Lab hosts.",foot:"Platforms: HTB = Hack The Box, PG = OffSec Proving Grounds, THM = TryHackMe, TCM = TCM Security. This list is updated as I keep training.",all:"All",machines:"machines",search:"Search",none:"No machines match."},
+  es:{title:"Máquinas de práctica",intro:"Todas las máquinas de práctica retiradas o públicas que resolví preparando las certificaciones ofensivas. Solo nombres: sin write-ups y sin hosts de exámenes ni de Pro Labs.",foot:"Plataformas: HTB = Hack The Box, PG = OffSec Proving Grounds, THM = TryHackMe, TCM = TCM Security. Esta lista se actualiza a medida que sigo entrenando.",all:"Todas",machines:"máquinas",search:"Buscar",none:"Ninguna máquina coincide."},
+  pt:{title:"Máquinas de prática",intro:"Todas as máquinas de prática aposentadas ou públicas que resolvi me preparando para as certificações ofensivas. Só nomes: sem write-ups e sem hosts de exames ou Pro Labs.",foot:"Plataformas: HTB = Hack The Box, PG = OffSec Proving Grounds, THM = TryHackMe, TCM = TCM Security. Esta lista é atualizada conforme continuo treinando.",all:"Todas",machines:"máquinas",search:"Buscar",none:"Nenhuma máquina corresponde."}
+};
+var lang="en"; try{var q=new URLSearchParams(location.search).get("lang"); if(T[q]) lang=q;}catch(e){}
+var t=T[lang]; document.documentElement.lang=lang;
+document.querySelectorAll("[data-t]").forEach(function(n){n.textContent=t[n.dataset.t];});
+document.getElementById("q").placeholder=t.search;
+document.getElementById("back").href="index.html"+(lang!=="en"?"?lang="+lang:"");
+var M=(window.MACHINES||[]).slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+var state={platform:"all",os:"all",q:""};
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+function count(key){var c={};M.forEach(function(m){c[m[key]]=(c[m[key]]||0)+1;});return c;}
+var tot=document.getElementById("totals"), cp=count("platform");
+var li=el("li"); li.appendChild(el("b",null,String(M.length))); li.appendChild(document.createTextNode(t.machines)); tot.appendChild(li);
+Object.keys(cp).sort(function(a,b){return cp[b]-cp[a];}).forEach(function(k){var l=el("li");l.appendChild(el("b",null,String(cp[k])));l.appendChild(document.createTextNode(k));tot.appendChild(l);});
+function seg(id,key,values){
+  var box=document.getElementById(id);
+  ["all"].concat(values).forEach(function(v){
+    var b=el("button",null,v==="all"?t.all:v); b.type="button"; b.setAttribute("aria-pressed",String(state[key]===v));
+    b.addEventListener("click",function(){state[key]=v; box.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed",String(x===b));}); render();});
+    box.appendChild(b);
+  });
+}
+seg("platforms","platform",Object.keys(cp).sort(function(a,b){return cp[b]-cp[a];}));
+var co=count("os"); seg("oses","os",Object.keys(co).sort(function(a,b){return co[b]-co[a];}));
+document.getElementById("q").addEventListener("input",function(e){state.q=e.target.value.trim().toLowerCase();render();});
+function render(){
+  var g=document.getElementById("grid"); g.textContent="";
+  var list=M.filter(function(m){return (state.platform==="all"||m.platform===state.platform)&&(state.os==="all"||m.os===state.os)&&(!state.q||m.name.toLowerCase().indexOf(state.q)>-1);});
+  if(!list.length){g.appendChild(el("li","empty",t.none));return;}
+  list.forEach(function(m){var l=el("li",m.status==="in-progress"?"prog":null); l.appendChild(el("span","n",m.name)); l.appendChild(el("span","m",m.platform+" • "+m.os)); l.title=m.track+(m.date?" • "+m.date:""); g.appendChild(l);});
+}
+render();
+})();
+</script>
+</body>
+</html>

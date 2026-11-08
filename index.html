@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jose Acosta Hernandez</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Security engineer who owns the account: FortiOS root cause, OSCP, and Netskope customer success across NAM, LATAM and Brazil.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Overpass+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a transit-authority service map. Signage bands head every section; the network diagram is the first viewport. */
+:root{
+  --ground:#f4f4ef;
+  --ground-2:#e7e7e0;
+  --ink:#15191c;
+  --muted:#4a5459;
+  --station:#ffffff;
+  --sign-bg:#15191c;
+  --sign-fg:#f4f4ef;
+  --tech:#0a5cad;
+  --cust:#c8202e;
+  --cert:#0c7f48;
+  --rule:#cfcfc6;
+  --on-line:#ffffff;
+  --focus:#e0a100;
+  --display:"Overpass","Helvetica Neue",Arial,sans-serif;
+  --body:"Overpass","Helvetica Neue",Arial,sans-serif;
+  --mono:"Overpass Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --step--1:.875rem; --step-0:1.0625rem; --step-1:1.3rem; --step-2:1.75rem; --step-3:clamp(2.2rem,4.4vw,4.2rem);
+  --gap:clamp(1rem,2vw,1.5rem);
+  --wrap:1240px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0b1a33; --ground-2:#132648; --ink:#eaeef5; --muted:#a9b8cf; --station:#eaeef5;
+    --sign-bg:#eaeef5; --sign-fg:#0b1a33; --tech:#5ba4ee; --cust:#ff6670; --cert:#45c886; --rule:#26395c; --focus:#ffc233; --on-line:#0b1a33;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0b1a33; --ground-2:#132648; --ink:#eaeef5; --muted:#a9b8cf; --station:#eaeef5;
+  --sign-bg:#eaeef5; --sign-fg:#0b1a33; --tech:#5ba4ee; --cust:#ff6670; --cert:#45c886; --rule:#26395c; --focus:#ffc233; --on-line:#0b1a33;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:var(--step-0);line-height:1.55;-webkit-font-smoothing:antialiased}
+::selection{background:var(--tech);color:var(--on-line)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:2px}
+a{color:inherit;text-underline-offset:.2em;text-decoration-thickness:2px}
+html{scrollbar-color:var(--muted) var(--ground-2)}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+p{margin:0}
+
+/* ---------- signage strip ---------- */
+.strip-top{background:var(--sign-bg);color:var(--sign-fg)}
+.strip-top .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1.5rem;padding-block:.8rem}
+.ident{display:flex;align-items:center;gap:.75rem;min-width:0}
+.roundel{flex:none;width:1.7rem;height:2.7rem;border-radius:.85rem;background:var(--sign-fg);display:grid;align-content:center;justify-items:center;gap:.25rem}
+.roundel i{display:block;width:.8rem;height:.8rem;border-radius:50%}
+.ident-name{font:800 1.15rem/1.1 var(--display);letter-spacing:.01em}
+.ident-role{font-size:var(--step--1);opacity:.85}
+.top-right{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.25rem}
+.langs{display:flex;border:2px solid var(--sign-fg);border-radius:4px;overflow:hidden}
+.langs button{appearance:none;border:0;background:transparent;color:var(--sign-fg);font:600 .95rem/1 var(--mono);padding:.5rem .7rem;cursor:pointer;letter-spacing:.06em}
+.langs button[aria-pressed="true"]{background:var(--sign-fg);color:var(--sign-bg)}
+.langs button:hover:not([aria-pressed="true"]){background:color-mix(in srgb,var(--sign-fg) 18%,transparent)}
+.top-links{display:flex;gap:1rem;font-weight:600;font-size:.95rem}
+.top-links a{text-decoration:none;border-bottom:2px solid transparent}
+.top-links a:hover{border-bottom-color:currentColor}
+
+/* ---------- first viewport ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,340px);grid-template-areas:"head side" "map side";grid-template-rows:auto 1fr;gap:clamp(1rem,2.5vw,1.75rem) clamp(1.5rem,3.5vw,3rem);padding-block:clamp(1.5rem,3.5vw,2.5rem) 2.5rem}
+.headline{grid-area:head;font-size:var(--step-3);font-weight:800;line-height:1.02;letter-spacing:-.03em;max-width:17ch}
+.side{grid-area:side;display:grid;gap:1.1rem;align-content:start}
+.mapcol{grid-area:map;min-width:0}
+.lede{color:var(--muted);max-width:60ch}
+.portrait{display:flex;align-items:center;gap:1.25rem;margin:0}
+.portrait img{flex:none;width:5.5rem;height:5.5rem;border-radius:50%;object-fit:cover;margin:1.2rem;box-shadow:0 0 0 .3rem var(--ground),0 0 0 .6rem var(--tech),0 0 0 .9rem var(--ground),0 0 0 1.2rem var(--cust)}
+.portrait figcaption{display:grid;gap:.15rem;font-size:.9rem;color:var(--muted);line-height:1.35}
+.portrait strong{color:var(--ink);font-size:1.05rem}
+.badges{list-style:none;margin:1.5rem 0 .5rem;padding:0;display:flex;flex-wrap:wrap;gap:1.5rem 2rem}
+.badges li{display:grid;justify-items:center;gap:.4rem;font:600 .8rem/1 var(--mono)}
+.badges img{width:7rem;height:7rem;object-fit:contain;background:#fff;border-radius:.9rem;padding:.5rem;box-shadow:inset 0 0 0 1px var(--rule)}
+.log-more{margin:1.25rem 0 0}
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,26rem),1fr));gap:2.5rem 3rem;margin-top:1.5rem}
+.case-head{display:flex;align-items:center;gap:.6rem;font-size:var(--step-1);font-weight:800;padding-bottom:.5rem;border-bottom:4px solid var(--c)}
+.case-stat{font:600 .85rem/1.5 var(--mono);color:var(--ink);margin:.75rem 0 .25rem}
+.case-list{list-style:none;margin:0;padding:0;counter-reset:case}
+.case-list li{counter-increment:case;position:relative;padding:1rem 0 1rem 2.6rem;border-bottom:1px solid var(--rule)}
+.case-list li::before{content:counter(case,decimal-leading-zero);position:absolute;left:0;top:1.05rem;font:600 .8rem/1 var(--mono);color:var(--c)}
+.case-list h4{font-size:1rem;font-weight:800;margin:0 0 .3rem}
+.case-list p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.5}
+.case-also{font-size:.95rem;font-weight:800;margin:1.5rem 0 0}
+.case-col .chips li{font-size:.84rem;font-weight:500;padding:.5rem .75rem;box-shadow:inset 0 0 0 .1rem var(--tech)}
+.log-more .repo-link{margin-left:0}
+html[data-mode="exec"] [data-detail]{display:none!important}
+html[data-mode="exec"] .case-list li:nth-child(n+4){display:none}
+html:not([data-mode="exec"]) .exec-only{display:none}
+.full-cta{margin-block:1rem 0;padding-block:2rem;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);display:grid;gap:.8rem;justify-items:start}
+.full-cta h2{font-size:var(--step-2,1.6rem);font-weight:800}
+.full-cta p{margin:0;color:var(--muted);max-width:60ch}
+.cta-btn{appearance:none;border:0;cursor:pointer;background:var(--ink);color:var(--ground);font:800 1.05rem/1 var(--display,inherit);padding:1rem 1.4rem;border-radius:.3rem;margin-top:.4rem}
+.cta-btn:hover{background:var(--tech);color:var(--on-line)}
+.modes button{font-family:var(--body,inherit);letter-spacing:0;text-transform:none}
+.top-right{flex-wrap:wrap;justify-content:flex-end}
+.repo-link{display:inline-block;margin-left:.75rem;font-weight:700;color:var(--tech);text-underline-offset:.2em}
+.lede strong{color:var(--ink);font-weight:600}
+.legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;font-size:var(--step--1);font-weight:600}
+.legend li{display:flex;align-items:center;gap:.55rem}
+.swatch{display:inline-block;width:2.2rem;height:.55rem;border-radius:.3rem;background:var(--c)}
+.swatch.hollow{background:transparent;box-shadow:inset 0 0 0 .18rem var(--c)}
+
+.map-wrap{overflow-x:auto}
+.map-svg{display:block;width:100%;height:auto;min-width:640px}
+.hint{font-size:var(--step--1);color:var(--muted);margin-top:.35rem}
+.ln{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ln-tech{stroke:var(--tech);stroke-width:14}
+.ln-cust{stroke:var(--cust);stroke-width:14}
+.ln-cert{stroke:var(--cert);stroke-width:14}
+.ln-cert-core{stroke:var(--ground);stroke-width:6}
+.ln-depot{stroke:var(--muted);stroke-width:6;stroke-dasharray:0}
+.stn circle.dot{fill:var(--station);stroke:var(--ink);stroke-width:4;transition:r .25s cubic-bezier(.16,1,.3,1)}
+.stn rect.cap{fill:var(--station);stroke:var(--ink);stroke-width:4}
+.stn .hit{fill:transparent}
+.stn{cursor:pointer}
+.stn:focus{outline:none}
+.stn:focus-visible .ring{stroke:var(--focus)}
+.stn .ring{fill:none;stroke:transparent;stroke-width:4}
+.stn:hover circle.dot{r:12}
+.stn[aria-pressed="true"] circle.dot{r:12;fill:var(--ink)}
+.stn[aria-pressed="true"] rect.cap{fill:var(--ink)}
+.lbl{fill:var(--ink);font:800 21px var(--display)}
+.lbl-sub{fill:var(--muted);font:600 18px var(--display)}
+.lbl-date{fill:var(--muted);font:600 16px var(--mono)}
+.lbl-val{fill:var(--ink);font:600 17px var(--mono)}
+.lbl-big{fill:var(--ink);font:800 30px var(--display)}
+.lbl-line{fill:var(--muted);font:600 16px var(--display);letter-spacing:.08em;text-transform:uppercase}
+.stn-term{cursor:pointer}
+.stn-term .plate{fill:var(--ink)}
+.stn-term .plate-text{fill:var(--ground);font:800 26px var(--display)}
+.stn-term .plate-arrow{fill:none;stroke:var(--ground);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.stn-term:hover .plate{fill:var(--tech)}
+.stn-term:focus{outline:none}
+.stn-term:focus-visible .plate{stroke:var(--focus);stroke-width:5}
+#train rect{fill:var(--ink);stroke:var(--ground);stroke-width:3}
+
+/* strip map (phones) */
+.strip{display:none;list-style:none;margin:0;padding:0}
+.strip .branch{list-style:none;margin:0;padding:0}
+
+/* ---------- info board ---------- */
+.board{background:var(--ground-2);border-radius:6px;overflow:hidden}
+.board-band{background:var(--sign-bg);color:var(--sign-fg);padding:.9rem 1.1rem;display:flex;align-items:center;gap:.75rem}
+.bullets{display:flex;gap:.3rem;flex:none}
+.bullet{width:1.1rem;height:1.1rem;border-radius:50%;background:var(--c)}
+.bullet.hollow{background:transparent;box-shadow:inset 0 0 0 .22rem var(--c)}
+.board-band .bullet.hollow{box-shadow:inset 0 0 0 .22rem var(--c)}
+.board-name{font:800 1.45rem/1.1 var(--display)}
+.board-body{padding:1rem 1.1rem 1.2rem;display:grid;gap:.9rem}
+.board-title{font-weight:600;line-height:1.35}
+.board-when{font:500 .85rem/1.4 var(--mono);color:var(--muted)}
+.board-value{font:600 .95rem/1.35 var(--mono);border-top:2px solid var(--ink);padding-top:.6rem}
+.group-head{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:.9rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem}
+.group-head .bullet{width:.8rem;height:.8rem}
+.proofs{list-style:none;margin:0;padding:0;display:grid;gap:.65rem}
+.proofs li{display:grid;gap:.2rem;font-size:.97rem;line-height:1.45}
+.tier{display:inline-flex;align-items:center;gap:.4rem;font:600 .72rem/1 var(--mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.tier::before{content:"";width:1.3rem;height:.35rem;border-radius:.2rem;background:var(--ink)}
+.tier.lab::before{background:transparent;box-shadow:inset 0 0 0 .12rem var(--ink)}
+.tier.academic::before{background:repeating-linear-gradient(90deg,var(--ink) 0 .3rem,transparent .3rem .5rem)}
+.tier.tool::before{width:.6rem;background:var(--muted)}
+.group-head .tier{margin-left:auto;font-weight:600;letter-spacing:.04em}
+.more{appearance:none;justify-self:start;background:transparent;border:2px solid var(--ink);color:var(--ink);font:800 .9rem/1 var(--display);padding:.65rem .9rem;border-radius:4px;cursor:pointer}
+.more:hover{background:var(--ink);color:var(--ground)}
+
+/* ---------- sections ---------- */
+section.sec{padding-block:clamp(2.5rem,6vw,4.5rem) 0}
+.sign{background:var(--sign-bg);color:var(--sign-fg);display:flex;align-items:center;gap:.8rem;padding:.75rem 1rem;border-radius:4px;font-size:var(--step-2);font-weight:800;letter-spacing:-.01em;line-height:1.1}
+.sec-intro{max-width:62ch;color:var(--muted);margin-top:1rem}
+
+.table-wrap{overflow-x:auto;margin-top:1.5rem}
+table{border-collapse:collapse;width:100%;min-width:640px;font-variant-numeric:tabular-nums}
+th{font:600 .78rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;padding:.6rem .75rem;border-bottom:3px solid var(--ink)}
+td{padding:.9rem .75rem;border-bottom:1px solid var(--rule);vertical-align:top}
+td.res{font-weight:600;max-width:46ch;line-height:1.4}
+td.where{white-space:nowrap}
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1.5rem 2.5rem;margin-top:1.5rem}
+.skill-group h3{font-size:var(--step-0);font-weight:800;padding-bottom:.45rem;border-bottom:3px solid var(--ink);margin-bottom:.3rem}
+.skill-list{list-style:none;margin:0;padding:0}
+.skill-list li{padding:.45rem 0;border-bottom:1px solid var(--rule);font-size:.97rem;line-height:1.4}
+.chips{list-style:none;margin:.6rem 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem}
+.chips li{font-size:.9rem;font-weight:600;line-height:1.2;padding:.55rem .85rem;border-radius:999px;box-shadow:inset 0 0 0 .14rem var(--cert)}
+.stack-h{font-size:var(--step-1);font-weight:800;margin:3rem 0 0}
+.stack{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:1.75rem 2.5rem;margin-top:1.25rem}
+.stack h4{font-size:.95rem;font-weight:800;padding-bottom:.4rem;border-bottom:2px solid var(--ink);margin:0}
+.stack .chips li{font-size:.84rem;font-weight:500;padding:.5rem .75rem}
+.stack .chips.hands li{background:var(--cert);color:var(--on-line);box-shadow:none;font-weight:600}
+.stack .chips.lab li{box-shadow:inset 0 0 0 .1rem var(--muted);color:var(--ink)}
+.stack-h{display:flex;align-items:center;gap:.6rem}
+.tier-key{display:inline-block;width:1.6rem;height:.9rem;border-radius:999px}
+.tier-key.hands{background:var(--cert)}
+.tier-key.lab{box-shadow:inset 0 0 0 .14rem var(--muted)}
+td.scale{font:600 .9rem/1.4 var(--mono);white-space:nowrap}
+table.log td.res{max-width:60ch;font-weight:400}
+td.line .bullets{gap:.25rem}
+td.line .bullet{width:.95rem;height:.95rem}
+
+.guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,4vw,3rem);margin-top:1.5rem}
+.guide h3{display:flex;align-items:center;gap:.6rem;font-size:var(--step-1);padding:.7rem 1rem;border-radius:4px;background:var(--c);color:var(--on-line)}
+.guide h3 .bullet{background:var(--on-line)}
+.sign.line{background:var(--c);color:var(--on-line)}
+.sign.line .bullet.hollow{--c:var(--on-line)}
+.stops{list-style:none;margin:0;padding:0}
+.stops li{position:relative;padding:.85rem 0 .85rem 2.1rem;border-bottom:1px solid var(--rule)}
+.stops li::before{content:"";position:absolute;left:.25rem;top:1.15rem;width:.85rem;height:.85rem;border-radius:50%;background:var(--station);box-shadow:0 0 0 .2rem var(--ink)}
+.stops li::after{content:"";position:absolute;left:.55rem;top:0;bottom:0;width:.3rem;background:var(--c);z-index:-1}
+.stops{position:relative;z-index:0}
+.stop-name{font-weight:800;display:block}
+.stop-items{color:var(--muted);font-size:.97rem}
+
+.certs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:1.5rem 2.5rem;margin-top:1.5rem}
+.certs h3{font-size:var(--step-0);font-weight:800;display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
+.certs ul{list-style:none;margin:0;padding:0}
+.certs li{padding:.45rem 0;border-bottom:1px solid var(--rule);font-size:.97rem;line-height:1.4}
+.certs .when{display:block;font:500 .8rem/1.4 var(--mono);color:var(--muted)}
+
+.depot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem 3rem;margin-top:1.5rem}
+.depot ul{list-style:none;margin:0;padding:0;counter-reset:bay}
+.depot li{display:grid;grid-template-columns:3.2rem 1fr;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--rule)}
+.bay{font:600 .8rem/1.6 var(--mono);color:var(--muted)}
+
+.announce{margin-top:1.5rem;display:grid;gap:0}
+.announce p{display:grid;grid-template-columns:3rem 1fr;gap:1rem;align-items:baseline;padding:.9rem 0;border-bottom:1px solid var(--rule);font-size:var(--step-1);font-weight:600;line-height:1.35}
+.announce span.code{font:600 .9rem var(--mono);color:var(--muted)}
+.facts{list-style:none;margin:1.5rem 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.6rem 2rem;color:var(--muted)}
+.facts strong{color:var(--ink)}
+
+.terminus{margin-top:clamp(3rem,7vw,5rem);background:var(--sign-bg);color:var(--sign-fg)}
+.terminus .wrap{padding-block:clamp(2.5rem,6vw,4rem);display:grid;gap:1.25rem}
+.terminus h2{font-size:var(--step-3);font-weight:800;letter-spacing:-.03em;line-height:1.02;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.terminus .cap-mark{width:2.6rem;height:4.2rem;border-radius:1.3rem;border:.35rem solid var(--sign-fg);flex:none;position:relative}
+.terminus .cap-mark::before,.terminus .cap-mark::after{content:"";position:absolute;left:50%;width:1rem;height:1rem;border-radius:50%;transform:translateX(-50%)}
+.terminus .cap-mark::before{top:.45rem;background:var(--tech)}
+.terminus .cap-mark::after{bottom:.45rem;background:var(--cust)}
+.terminus p{max-width:56ch;opacity:.9}
+.contact-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.email{font:600 clamp(1rem,2.4vw,1.35rem)/1.2 var(--mono);padding:.8rem 1rem;border:2px solid var(--sign-fg);border-radius:4px;word-break:break-all}
+.btn{appearance:none;font:800 1rem/1 var(--display);padding:.95rem 1.2rem;border-radius:4px;border:2px solid var(--sign-fg);background:var(--sign-fg);color:var(--sign-bg);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem}
+.btn.ghost{background:transparent;color:var(--sign-fg)}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost:hover{background:color-mix(in srgb,var(--sign-fg) 14%,transparent)}
+.copied{font:600 .85rem var(--mono);min-width:6ch}
+footer{background:var(--sign-bg);color:var(--sign-fg);border-top:1px solid color-mix(in srgb,var(--sign-fg) 25%,transparent)}
+footer .wrap{padding-block:1.1rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1.5rem;font-size:var(--step--1);opacity:.8}
+
+/* language flip: one shared clock for every sign */
+@keyframes flap{0%{transform:rotateX(0)}45%{transform:rotateX(90deg)}55%{transform:rotateX(-90deg)}100%{transform:rotateX(0)}}
+.flipping [data-i18n]:not(text):not(tspan){display:inline-block;animation:flap .32s cubic-bezier(.16,1,.3,1);transform-origin:50% 55%}
+.flipping .headline[data-i18n],.flipping .lede[data-i18n],.flipping p[data-i18n]{display:block}
+.flipping .board-body,.flipping .board-band{animation:flap .32s cubic-bezier(.16,1,.3,1);transform-origin:50% 0}
+@media (prefers-reduced-motion: reduce){.flipping *{animation:none!important}}
+
+/* ---------- responsive ---------- */
+@media (max-width:1020px){
+  .hero{grid-template-columns:1fr;grid-template-areas:"head" "map" "side"}
+  .side{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+  .side .board{grid-column:1 / -1}
+}
+@media (max-width:760px){
+  .map-wrap,.hint{display:none}
+  .strip{display:block;margin-top:.5rem}
+  .hero{grid-template-areas:"head" "side" "map"}
+  .side{grid-template-columns:1fr}
+  .side > .board{display:none}
+  .guide,.depot{grid-template-columns:1fr}
+  .strip li.st{position:relative}
+  .strip li.st::before{content:"";position:absolute;left:1.05rem;top:0;bottom:0;width:.55rem;background:var(--c)}
+  .strip li.st.both::before{width:1.4rem;left:.85rem;background:linear-gradient(90deg,var(--tech) 0 .55rem,transparent .55rem .85rem,var(--cust) .85rem 1.4rem)}
+  .strip li.st.first::before{top:1.6rem}
+  .strip li.st.last::before{bottom:auto;height:1.6rem}
+  .strip li.st.spur::before{background:var(--muted);width:.3rem;left:1.17rem}
+  .strip .branch{border-left:0;margin-left:2.6rem;position:relative}
+  .strip .branch li.st::before{background:transparent;box-shadow:inset 0 0 0 .16rem var(--cert);left:.5rem}
+  .st-btn{appearance:none;position:relative;display:grid;grid-template-columns:2.6rem 1fr;align-items:center;gap:.25rem .5rem;width:100%;text-align:left;background:transparent;border:0;color:inherit;font:inherit;padding:.65rem 0;cursor:pointer}
+  .branch .st-btn{grid-template-columns:1.55rem 1fr}
+  .st-btn .dot{justify-self:center;width:1.15rem;height:1.15rem;border-radius:50%;background:var(--station);box-shadow:0 0 0 .22rem var(--ink);position:relative;z-index:1}
+  .st.both .st-btn .dot,.st.end .st-btn .dot{width:1.7rem;height:2.4rem;border-radius:.85rem}
+  .st-btn[aria-pressed="true"] .dot{background:var(--ink)}
+  .st-name{font-weight:800;line-height:1.2}
+  .st-when{grid-column:2;font:600 .85rem/1.3 var(--body);color:var(--muted)}
+  .strip .board{margin:0 0 .75rem 2.6rem;position:relative;z-index:1}
+  .branch .board{margin-left:0}
+  .sign{font-size:var(--step-1)}
+  .announce p{font-size:var(--step-0);grid-template-columns:2.4rem 1fr}
+}
+</style>
+
+<script>(function(){var m="exec";try{var q=new URLSearchParams(location.search).get("mode");var sv=localStorage.getItem("ja-mode");if(q==="full"||q==="exec")m=q;else if(sv==="full")m="full";}catch(e){}document.documentElement.setAttribute("data-mode",m);})();</script>
+</head>
+<body>
+<header class="strip-top">
+  <div class="wrap">
+    <div class="ident">
+      <span class="roundel" aria-hidden="true"><i style="background:var(--tech)"></i><i style="background:var(--cust)"></i></span>
+      <div>
+        <div class="ident-name">Jose Acosta Hernandez</div>
+        <div class="ident-role" data-i18n="role">Security engineer • Customer success</div>
+      </div>
+    </div>
+    <div class="top-right">
+      <div class="langs modes" role="group" aria-label="View">
+        <button type="button" data-mode="exec" aria-pressed="true" data-i18n="modeExec">Executive</button>
+        <button type="button" data-mode="full" aria-pressed="false" data-i18n="modeFull">Full detail</button>
+      </div>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-es" data-lang="es" aria-pressed="false">ES</button>
+        <button type="button" id="lang-pt" data-lang="pt" aria-pressed="false">PT</button>
+      </div>
+      <nav class="top-links" aria-label="Contact">
+        <a href="#contact" data-i18n="navContact">Contact</a>
+        <a href="https://www.linkedin.com/in/jose-acosta-hernandez" target="_blank" rel="noopener">LinkedIn</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero" id="network">
+    <h1 class="headline" data-i18n="headline">I debug the packet capture and keep the account renewing.</h1>
+    <div class="side" id="board-home">
+      <figure class="portrait"><img src="assets/jose.jpg" width="180" height="180" alt="Jose Acosta Hernandez" decoding="async"><figcaption><strong>Jose Acosta Hernandez</strong><span data-i18n="portraitCap">Security engineer • Customer success • Colombia</span></figcaption></figure>
+      <p class="lede" data-i18n-html="lede"></p>
+      <ul class="legend">
+        <li><span class="swatch" style="--c:var(--tech)"></span><span data-i18n="legTech">Technical line</span></li>
+        <li><span class="swatch" style="--c:var(--cust)"></span><span data-i18n="legCust">Customer line</span></li>
+        <li><span class="swatch hollow" style="--c:var(--cert)"></span><span data-i18n="legCert">Certification line • lab and exam</span></li>
+      </ul>
+      <aside class="board" id="board" aria-live="polite">
+        <div class="board-band"><span class="bullets" id="board-bullets"></span><span class="board-name" id="board-name"></span></div>
+        <div class="board-body" id="board-body"></div>
+      </aside>
+    </div>
+    <div class="mapcol">
+      <div class="map-wrap">
+        <svg class="map-svg" viewBox="20 34 1180 556" role="group" aria-labelledby="map-title">
+          <title id="map-title">Career network map</title>
+          <path id="p-cert" class="ln ln-cert" d="M270 330 L480 120 H1070"/>
+          <path class="ln ln-cert-core" d="M270 330 L480 120 H1070"/>
+          <path id="p-depot" class="ln ln-depot" d="M720 372 L830 482 H900"/>
+          <path id="p-cust" class="ln ln-cust" d="M420 560 H520 L720 360 H1110"/>
+          <path id="p-tech" class="ln ln-tech" d="M90 330 H1110"/>
+
+          <text class="lbl-line" x="405" y="566" text-anchor="end" data-i18n="custOpens">Customer line opens • 2024</text>
+
+          <g class="stn" data-station="unimag" tabindex="0" role="button" aria-pressed="false">
+            <circle class="hit" cx="90" cy="330" r="24"/><circle class="ring" cx="90" cy="330" r="18"/><circle class="dot" cx="90" cy="330" r="9"/>
+            <text class="lbl" x="90" y="376" text-anchor="middle">Universidad</text>
+            <text class="lbl" x="90" y="399" text-anchor="middle">del Magdalena</text>
+            <text class="lbl-date" x="90" y="422" text-anchor="middle">2017–2023</text>
+          </g>
+          <g class="stn" data-station="sykes" tabindex="0" role="button" aria-pressed="false">
+            <circle class="hit" cx="270" cy="330" r="24"/><circle class="ring" cx="270" cy="330" r="18"/><circle class="dot" cx="270" cy="330" r="9"/>
+            <text class="lbl" x="270" y="376" text-anchor="middle">SYKES LATAM</text>
+            <text class="lbl-sub" x="270" y="400" text-anchor="middle">Cisco TAC • ISE</text>
+            <text class="lbl-date" x="270" y="422" text-anchor="middle">2021–2022</text>
+          </g>
+          <g class="stn" data-station="fortinet" tabindex="0" role="button" aria-pressed="false">
+            <circle class="hit" cx="470" cy="330" r="24"/><circle class="ring" cx="470" cy="330" r="18"/><circle class="dot" cx="470" cy="330" r="9"/>
+            <text class="lbl" x="470" y="376" text-anchor="middle">Fortinet</text>
+            <text class="lbl-sub" x="470" y="400" text-anchor="middle">TSE P3</text>
+            <text class="lbl-date" x="470" y="422" text-anchor="middle">2022–2024</text>
+            <text class="lbl-val" x="470" y="446" text-anchor="middle" data-i18n="fortiValue">2 yrs 4 mos hands-on FortiOS</text>
+          </g>
+          <g class="stn" data-station="netskope" tabindex="0" role="button" aria-pressed="false">
+            <rect class="hit" x="690" y="300" width="60" height="90"/><rect class="ring" x="692" y="304" width="56" height="82" rx="28"/>
+            <rect class="cap" x="702" y="314" width="36" height="62" rx="18"/>
+            <text class="lbl-big" x="720" y="238" text-anchor="middle">Netskope</text>
+            <text class="lbl-date" x="720" y="263" text-anchor="middle">CSM 2024–2026</text>
+            <text class="lbl-val" x="720" y="290" text-anchor="middle" data-i18n="nsValue">+$900k TCV • 2,000+ account book</text>
+          </g>
+          <g class="stn" data-station="depot" tabindex="0" role="button" aria-pressed="false">
+            <circle class="hit" cx="900" cy="482" r="24"/><circle class="ring" cx="900" cy="482" r="18"/><circle class="dot" cx="900" cy="482" r="9"/>
+            <text class="lbl" x="900" y="524" text-anchor="middle" data-i18n="depot">Workshop depot</text>
+            <text class="lbl-sub" x="900" y="547" text-anchor="middle" data-i18n="depotSub">Python • AI tooling</text>
+          </g>
+          <g class="stn" data-station="terminus" tabindex="-1" aria-hidden="true">
+            <rect class="cap" x="1092" y="314" width="36" height="62" rx="18"/>
+          </g>
+          <a class="stn-term" href="#contact" id="terminus-link">
+            <text class="lbl-sub" x="1102" y="410" text-anchor="middle" data-i18n="nextStation">Next station</text>
+            <rect class="plate" x="1010" y="422" width="186" height="56" rx="8"/>
+            <text class="plate-text" x="1026" y="459" data-i18n="yourTeam">Your team</text>
+            <path class="plate-arrow" d="M1166 450 H1184 M1176 441 L1185 450 L1176 459"/>
+          </a>
+
+          <g class="stn" data-station="ccna" tabindex="0" role="button" aria-pressed="false">
+            <circle class="hit" cx="520" cy="120" r="24"/><circle class="ring" cx="520" cy="120" r="18"/><circle class="dot" cx="520" cy="120" r="9"/>
+            <text class="lbl" x="520" y="72" text-anchor="middle">CCNA</text>
+            <text class="lbl-sub" x="520" y="96" text-anchor="middle">Cisco</text>
+          </g>
+          <g class="stn" data-station="nse" tabindex="0" role="button" aria-pressed="false">
+            <circle class="hit" cx="700" cy="120" r="24"/><circle class="ring" cx="700" cy="120" r="18"/><circle class="dot" cx="700" cy="120" r="9"/>
+            <text class="lbl" x="700" y="72" text-anchor="middle">NSE 7 • NSE 4</text>
+            <text class="lbl-sub" x="700" y="96" text-anchor="middle">Fortinet +7</text>
+          </g>
+          <g class="stn" data-station="oscp" tabindex="0" role="button" aria-pressed="false">
+            <circle class="hit" cx="880" cy="120" r="24"/><circle class="ring" cx="880" cy="120" r="18"/><circle class="dot" cx="880" cy="120" r="9"/>
+            <text class="lbl" x="880" y="72" text-anchor="middle">OSCP</text>
+            <text class="lbl-sub" x="880" y="96" text-anchor="middle">OffSec</text>
+          </g>
+          <g class="stn" data-station="crte" tabindex="0" role="button" aria-pressed="false">
+            <circle class="hit" cx="1060" cy="120" r="24"/><circle class="ring" cx="1060" cy="120" r="18"/><circle class="dot" cx="1060" cy="120" r="9"/>
+            <text class="lbl" x="1060" y="72" text-anchor="middle">CRTE</text>
+            <text class="lbl-sub" x="1060" y="96" text-anchor="middle">+ CRTP • AD</text>
+          </g>
+
+          <g id="train" aria-hidden="true"><rect x="-14" y="-8" width="28" height="16" rx="8"/></g>
+        </svg>
+      </div>
+      <p class="hint" data-i18n="hint">Select a station to read the proof at that stop.</p>
+
+      <ol class="strip" aria-label="Career network">
+        <li class="st first" style="--c:var(--tech)"><button class="st-btn" type="button" data-station="unimag" aria-pressed="false"><span class="dot"></span><span class="st-name">Universidad del Magdalena</span><span class="st-when">2017–2023</span></button></li>
+        <li class="st" style="--c:var(--tech)"><button class="st-btn" type="button" data-station="sykes" aria-pressed="false"><span class="dot"></span><span class="st-name">SYKES LATAM</span><span class="st-when">Cisco TAC • ISE • 2021–2022</span></button>
+          <ol class="branch">
+            <li class="st" style="--c:var(--cert)"><button class="st-btn" type="button" data-station="ccna" aria-pressed="false"><span class="dot"></span><span class="st-name">CCNA</span><span class="st-when">Cisco</span></button></li>
+            <li class="st" style="--c:var(--cert)"><button class="st-btn" type="button" data-station="nse" aria-pressed="false"><span class="dot"></span><span class="st-name">NSE 7 • NSE 4</span><span class="st-when">Fortinet +7</span></button></li>
+            <li class="st" style="--c:var(--cert)"><button class="st-btn" type="button" data-station="oscp" aria-pressed="false"><span class="dot"></span><span class="st-name">OSCP</span><span class="st-when">OffSec • Pentest</span></button></li>
+            <li class="st" style="--c:var(--cert)"><button class="st-btn" type="button" data-station="crte" aria-pressed="false"><span class="dot"></span><span class="st-name">CRTP • CRTE</span><span class="st-when">Red team • AD</span></button></li>
+          </ol>
+        </li>
+        <li class="st" style="--c:var(--tech)"><button class="st-btn" type="button" data-station="fortinet" aria-pressed="false"><span class="dot"></span><span class="st-name">Fortinet</span><span class="st-when" data-i18n="fortiValue">2 yrs 4 mos hands-on FortiOS</span></button></li>
+        <li class="st both"><button class="st-btn" type="button" data-station="netskope" aria-pressed="false"><span class="dot"></span><span class="st-name">Netskope</span><span class="st-when" data-i18n="nsValue">+$900k TCV • 2,000+ account book</span></button></li>
+        <li class="st both spur-host"><button class="st-btn" type="button" data-station="depot" aria-pressed="false"><span class="dot"></span><span class="st-name" data-i18n="depot">Workshop depot</span><span class="st-when" data-i18n="depotSub">Python • AI tooling</span></button></li>
+        <li class="st both end last"><button class="st-btn" type="button" data-station="terminus" aria-pressed="false"><span class="dot"></span><span class="st-name" data-i18n="yourTeam">Your team</span><span class="st-when" data-i18n="nextStation">Next station</span></button></li>
+      </ol>
+    </div>
+  </div>
+
+  <section class="sec wrap" aria-labelledby="record-h">
+    <h2 class="sign" id="record-h"><span data-i18n="recordTitle">Service record</span></h2>
+    <p class="sec-intro" data-i18n="recordIntro">Every figure here is the exact number from my own record, with where it happened.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th data-i18n="thResult">Result</th><th data-i18n="thWhere">Where</th><th data-i18n="thLine">Line</th><th data-i18n="thService">Service</th></tr></thead>
+        <tbody id="record-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec wrap" data-detail aria-labelledby="guide-h">
+    <h2 class="sign" id="guide-h"><span data-i18n="guideTitle">What runs on each line</span></h2>
+    <div class="guide">
+      <div style="--c:var(--tech)">
+        <h3><span class="bullet" style="--c:var(--tech)"></span><span data-i18n="legTech">Technical line</span></h3>
+        <ul class="stops" id="guide-tech"></ul>
+      </div>
+      <div style="--c:var(--cust)">
+        <h3><span class="bullet" style="--c:var(--cust)"></span><span data-i18n="legCust">Customer line</span></h3>
+        <ul class="stops" id="guide-cust"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap" aria-labelledby="cases-h">
+    <h2 class="sign" id="cases-h"><span data-i18n="casesTitle">Case files</span></h2>
+    <p class="sec-intro" data-i18n="casesIntro">What the numbers looked like up close. Each case is a pattern I met often, and how I handled it.</p>
+    <div class="cases">
+      <div class="case-col" style="--c:var(--tech)">
+        <h3 class="case-head"><span class="swatch" style="--c:var(--tech)"></span><span data-i18n="casesSupport">Support desk • Fortinet</span></h3>
+        <p class="case-stat" data-i18n="casesSupportStat">2,000+ cases closed • CSAT above 4.7 • 300+ positive reviews</p>
+        <ol class="case-list" id="cases-support"></ol>
+        <div data-detail><h4 class="case-also" data-i18n="casesAlso">Also on the desk</h4>
+        <ul class="chips" id="cases-support-also"></ul></div>
+      </div>
+      <div class="case-col" style="--c:var(--cust)">
+        <h3 class="case-head"><span class="swatch" style="--c:var(--cust)"></span><span data-i18n="casesCsm">Named enterprise accounts • Netskope</span></h3>
+        <p class="case-stat" data-i18n="casesCsmStat">Roughly 60 named accounts • about 60% moved from red to green</p>
+        <ol class="case-list" id="cases-csm"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap" aria-labelledby="cert-h">
+    <h2 class="sign line" id="cert-h" style="--c:var(--cert)"><span class="bullet hollow"></span><span data-i18n="certTitle">Certification line</span></h2>
+    <p class="sec-intro" data-i18n="certIntro">Earned in lab and exam environments. Each offensive certification ended in a full written penetration-test report.</p>
+    <ul class="badges" aria-label="Certification badges">
+      <li><img src="assets/badges/nse7.svg" width="120" height="120" alt="Fortinet NSE 7 badge" loading="lazy"><span>NSE 7</span></li>
+      <li><img src="assets/badges/nse4.svg" width="120" height="120" alt="Fortinet NSE 4 badge" loading="lazy"><span>NSE 4</span></li>
+      <li><img src="assets/badges/crte.png" width="120" height="120" alt="Certified Red Team Expert (CRTE) badge" loading="lazy"><span>CRTE</span></li>
+      <li><img src="assets/badges/crtp.png" width="120" height="120" alt="Certified Red Team Professional (CRTP) badge" loading="lazy"><span>CRTP</span></li>
+      <li><img src="assets/badges/ccna.png" width="120" height="120" alt="Cisco CCNA badge" loading="lazy"><span>CCNA</span></li>
+      <li><img src="assets/badges/gainsight-csm.png" width="120" height="120" alt="Gainsight Customer Success Manager Advanced badge" loading="lazy"><span>CSM ADV.</span></li>
+    </ul>
+    <div class="certs" data-detail>
+      <div>
+        <h3>Fortinet</h3>
+        <ul>
+          <li>NSE 7 – Network Security Architect</li>
+          <li>NSE 4 – Network Security Professional</li>
+          <li>Certified Solution Specialist – Secure Access Service Edge</li>
+          <li>SD-WAN 7.0 Architect</li>
+          <li>FortiSOAR Administrator</li>
+          <li>FortiEDR 5.0 Administrator</li>
+          <li>FortiSIEM 6.3 Administrator</li>
+          <li>AWS Cloud Security 7.0 Administrator</li>
+          <li>Azure Cloud Security 7.0 Administrator</li>
+        </ul>
+      </div>
+      <div>
+        <h3 data-i18n="certOffensive">Offensive security</h3>
+        <ul>
+          <li>OffSec Certified Professional (OSCP)</li>
+          <li>Certified Red Team Expert (CRTE)</li>
+          <li>Certified Red Team Professional (CRTP)</li>
+        </ul>
+        <h3 data-i18n="certNetworking" style="margin-top:1.4rem">Networking</h3>
+        <ul><li>Cisco Certified Network Associate (CCNA)</li></ul>
+        <h3 data-i18n="certCS" style="margin-top:1.4rem">Customer success</h3>
+        <ul><li>Customer Success Manager ADVANCED Certified Professional – Gainsight</li></ul>
+      </div>
+      <div>
+        <h3 data-i18n="eduTitle">Education</h3>
+        <ul>
+          <li><span data-i18n="eeDegree">Engineer's Degree, Electrical and Electronics Engineering</span> – Universidad del Magdalena<span class="when">2017 – 2023</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap exec-only" aria-labelledby="cta-h"><div class="full-cta">
+    <h2 id="cta-h" data-i18n="ctaTitle">This is the short version.</h2>
+    <p data-i18n="ctaText">The full detail adds every support and CSM case, the training logbook, the red team skills and the technologies behind them, the tools I built, and the languages I work in.</p>
+    <button type="button" class="cta-btn" id="cta-full"><span data-i18n="ctaBtn">See the full technical detail</span> →</button>
+  </div></section>
+
+  <section class="sec wrap" data-detail aria-labelledby="log-h">
+    <h2 class="sign line" id="log-h" style="--c:var(--cert)"><span class="bullet hollow"></span><span data-i18n="logTitle">Training logbook</span></h2>
+    <p class="sec-intro" data-i18n="logIntro">The lab hours behind the certification line, Aug 2023 to May 2024. Names and counts only: exam and Pro Lab content stays private, as the platforms require.</p>
+    <div class="table-wrap">
+      <table class="log">
+        <thead><tr><th data-i18n="thWhen">When</th><th data-i18n="thWork">Work</th><th data-i18n="thScale">Scale</th></tr></thead>
+        <tbody id="log-body"></tbody>
+      </table>
+    </div>
+    <p class="log-more"><a class="repo-link" id="machines-link" href="machines.html"><span data-i18n="machinesLink">See every practice machine by name</span> →</a></p>
+  </section>
+
+  <section class="sec wrap" data-detail aria-labelledby="skills-h">
+    <h2 class="sign line" id="skills-h" style="--c:var(--cert)"><span class="bullet hollow"></span><span data-i18n="skillsTitle">Red team skills</span></h2>
+    <p class="sec-intro" data-i18n="skillsIntro">What I had to know to work through the labs and the three exams. All of it learned and proven in lab and exam environments, and written up in full reports.</p>
+    <div class="skills" id="skills"></div>
+    <h3 class="stack-h"><span class="tier-key hands" aria-hidden="true"></span><span data-i18n="handsTitle">Hands-on</span></h3>
+    <p class="sec-intro" data-i18n="handsIntro">What I actually work with, and the techniques I practised across 170+ machines until they became routine.</p>
+    <div class="stack" id="stack-hands"></div>
+    <h3 class="stack-h"><span class="tier-key lab" aria-hidden="true"></span><span data-i18n="labTitle">Figured out in the lab</span></h3>
+    <p class="sec-intro" data-i18n="labIntro">I don't claim expertise in these. Every practice machine ran something different, so each time I sat down with the documentation and the code until I understood how it worked, well enough to find where it failed. What carries over is that method, not mastery of each product.</p>
+    <div class="stack" id="stack-lab"></div>
+  </section>
+
+  <section class="sec wrap" data-detail aria-labelledby="depot-h">
+    <h2 class="sign" id="depot-h"><span data-i18n="depot">Workshop depot</span></h2>
+    <div class="depot">
+      <p class="sec-intro" style="margin-top:0" data-i18n="depotIntro">At Netskope, about a third of my working time went into building the tools the role ran on. They are personal tools with no public repository; I can walk you through them on a screen-share.</p>
+      <ul id="depot-list"></ul>
+    </div>
+  </section>
+
+  <section class="sec wrap" data-detail aria-labelledby="lang-h">
+    <h2 class="sign" id="lang-h"><span data-i18n="langTitle">Service announcements</span></h2>
+    <div class="announce">
+      <p lang="en"><span class="code">EN</span><span>This service runs in English, Spanish and Portuguese, across NAM, LATAM and Brazil.</span></p>
+      <p lang="es"><span class="code">ES</span><span>Este servicio opera en inglés, español y portugués, en NAM, LATAM y Brasil.</span></p>
+      <p lang="pt"><span class="code">PT</span><span>Este serviço opera em inglês, espanhol e português, em NAM, LATAM e Brasil.</span></p>
+    </div>
+    <ul class="facts" id="facts"></ul>
+  </section>
+</main>
+
+<section class="terminus" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <h2 id="contact-h"><span class="cap-mark" aria-hidden="true"></span><span data-i18n="contactTitle">Next station: your team.</span></h2>
+    <p data-i18n="contactText">I'm looking for my next role as a Technical Account Manager, Customer Engineer, technical Customer Success Manager or Integration Engineer.</p>
+    <div class="contact-row">
+      <span class="email" id="email">josealejandroa99@gmail.com</span>
+      <button class="btn" type="button" id="copy-email"><span data-i18n="copy">Copy email</span></button>
+      <a class="btn ghost" href="mailto:josealejandroa99@gmail.com" data-i18n="write">Write to me</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/jose-acosta-hernandez" target="_blank" rel="noopener">LinkedIn</a>
+      <span class="copied" id="copied" aria-live="polite"></span>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="wrap">
+    <span data-i18n="footNumbers">Every number on this page comes from my own work record.</span>
+    <span data-i18n="footScale">Diagram not to scale.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var T = {
+  en:{
+    role:"Security engineer • Customer success", navContact:"Contact",
+    headline:"I debug the packet capture and keep the account renewing.",
+    lede:"<strong>Five years</strong> in network security and post-sales across NAM, LATAM and Brazil: <strong>two years and four months</strong> of hands-on FortiOS escalations at Fortinet, then <strong>two years</strong> owning Netskope accounts. OSCP, NSE 7, CCNA.",
+    legTech:"Technical line", legCust:"Customer line", legCert:"Certification line • lab and exam",
+    hint:"Select a station to read the proof at that stop.", custOpens:"Customer line opens • 2024",
+    fortiValue:"2 yrs 4 mos hands-on FortiOS", nsValue:"+$900k TCV • 2,000+ account book",
+    depot:"Workshop depot", depotSub:"Python • AI tooling", nextStation:"Next station", yourTeam:"Your team",
+    tier_prod:"In production", tier_lab:"Lab and exam", tier_academic:"Academic", tier_tool:"Personal tool",
+    recordTitle:"Service record", recordIntro:"Every figure here is the exact number from my own record, with where it happened.",
+    thResult:"Result", thWhere:"Where", thLine:"Line", thService:"Service",
+    guideTitle:"What runs on each line",
+    certTitle:"Certification line", certIntro:"Earned in lab and exam environments. Each offensive certification ended in a full written penetration-test report.",
+    certOffensive:"Offensive security", certNetworking:"Networking", certCS:"Customer success",
+    eduTitle:"Education", eeDegree:"Engineer's Degree, Electrical and Electronics Engineering",
+    depotIntro:"At Netskope, about a third of my working time went into building the tools the role ran on. They are personal tools with no public repository; I can walk you through them on a screen-share.",
+    langTitle:"Service announcements", logTitle:"Training logbook", skillsTitle:"Red team skills", handsTitle:"Hands-on", handsIntro:"What I actually work with, and the techniques I practised across 170+ machines until they became routine.", labTitle:"Figured out in the lab", labIntro:"I don't claim expertise in these. Every practice machine ran something different, so each time I sat down with the documentation and the code until I understood how it worked, well enough to find where it failed. What carries over is that method, not mastery of each product.", skillsIntro:"What I had to know to work through the labs and the three exams. All of it learned and proven in lab and exam environments, and written up in full reports.", logIntro:"The lab hours behind the certification line, Aug 2023 to May 2024. Names and counts only: exam and Pro Lab content stays private, as the platforms require.", thWhen:"When", thWork:"Work", thScale:"Scale", depotLabHead:"Lab tools I wrote while studying", depotRepo:"Source on GitHub", modeExec:"Executive", modeFull:"Full detail", ctaTitle:"This is the short version.", ctaText:"The full detail adds every support and CSM case, the training logbook, the red team skills and the technologies behind them, the tools I built, and the languages I work in.", ctaBtn:"See the full technical detail", casesTitle:"Case files", casesIntro:"What the numbers looked like up close. Each case is a pattern I met often, and how I handled it.", casesSupport:"Support desk • Fortinet", casesSupportStat:"2,000+ cases closed • CSAT above 4.7 out of 5 • 300+ positive reviews", casesCsm:"Named enterprise accounts • Netskope", casesCsmStat:"Roughly 60 named accounts • $6.2M ARR • about 60% moved from red to green", casesAlso:"Also on the desk", machinesLink:"See every practice machine by name", portraitCap:"Security engineer • Customer success • Colombia",
+    contactTitle:"Next station: your team.",
+    contactText:"I'm looking for my next role as a Technical Account Manager, Customer Engineer, technical Customer Success Manager or Integration Engineer.",
+    copy:"Copy email", copied:"Copied", copyFail:"Select the address to copy it", write:"Write to me",
+    footNumbers:"Every number on this page comes from my own work record.", footScale:"Diagram not to scale.",
+    terminusText:"This is where both lines go next. Contact details are at the end of the line.", terminusCta:"Go to contact", showAll:"Show all {n} proofs at this stop", showLess:"Show fewer"
+  },
+  es:{
+    role:"Ingeniero de seguridad • Customer success", navContact:"Contacto",
+    headline:"Depuro la captura de paquetes y mantengo la cuenta renovando.",
+    lede:"<strong>Cinco años</strong> en seguridad de redes y posventa en NAM, LATAM y Brasil: <strong>dos años y cuatro meses</strong> resolviendo escalamientos de FortiOS en Fortinet y luego <strong>dos años</strong> a cargo de cuentas en Netskope. OSCP, NSE 7, CCNA.",
+    legTech:"Línea técnica", legCust:"Línea de cliente", legCert:"Línea de certificación • laboratorio y examen",
+    hint:"Selecciona una estación para ver las pruebas de esa parada.", custOpens:"Abre la línea de cliente • 2024",
+    fortiValue:"2 años 4 meses con FortiOS", nsValue:"+$900k TCV • cartera de 2,000+ cuentas",
+    depot:"Taller", depotSub:"Python • herramientas de IA", nextStation:"Próxima estación", yourTeam:"Tu equipo",
+    tier_prod:"En producción", tier_lab:"Laboratorio y examen", tier_academic:"Académico", tier_tool:"Herramienta propia",
+    recordTitle:"Registro de servicio", recordIntro:"Cada cifra aquí es el número exacto de mi historial, con el lugar donde ocurrió.",
+    thResult:"Resultado", thWhere:"Dónde", thLine:"Línea", thService:"Servicio",
+    guideTitle:"Qué corre en cada línea",
+    certTitle:"Línea de certificación", certIntro:"Obtenidas en entornos de laboratorio y examen. Cada certificación ofensiva terminó en un reporte de pentest escrito y completo.",
+    certOffensive:"Seguridad ofensiva", certNetworking:"Redes", certCS:"Customer success",
+    eduTitle:"Educación", eeDegree:"Ingeniería Eléctrica y Electrónica (título de ingeniero)",
+    depotIntro:"En Netskope, cerca de un tercio de mi tiempo se iba en construir las herramientas con las que trabajaba. Son herramientas propias, sin repositorio público; puedo mostrártelas en una videollamada.",
+    langTitle:"Anuncios del servicio", logTitle:"Bitácora de entrenamiento", handsTitle:"Práctica real", handsIntro:"Con lo que de verdad trabajo, y las técnicas que practiqué en más de 170 máquinas hasta volverlas rutina.", labTitle:"Lo que descifré en el laboratorio", labIntro:"No me declaro experto en estas tecnologías. Cada máquina de práctica corría algo distinto, así que en cada caso me senté con la documentación y el código hasta entender cómo funcionaba, lo suficiente para encontrar dónde fallaba. Lo que traigo es ese método, no el dominio de cada producto.", skillsTitle:"Habilidades de red team", skillsIntro:"Lo que tuve que dominar para resolver los laboratorios y los tres exámenes. Todo aprendido y demostrado en entornos de laboratorio y examen, y documentado en reportes completos.", logIntro:"Las horas de laboratorio detrás de la línea de certificación, de ago 2023 a may 2024. Solo nombres y cantidades: el contenido de los exámenes y de los Pro Labs se mantiene privado, como exigen las plataformas.", thWhen:"Cuándo", thWork:"Trabajo", thScale:"Escala", depotLabHead:"Herramientas de laboratorio que escribí estudiando", depotRepo:"Código en GitHub", modeExec:"Ejecutivo", modeFull:"Detalle", ctaTitle:"Esta es la versión corta.", ctaText:"El detalle completo suma todos los casos de soporte y de CSM, la bitácora de entrenamiento, las habilidades de red team y las tecnologías detrás, las herramientas que construí y los idiomas en que trabajo.", ctaBtn:"Ver todo el detalle técnico", casesTitle:"Expedientes", casesIntro:"Cómo se veían los números de cerca. Cada caso es un patrón que encontré seguido, y cómo lo resolví.", casesSupport:"Soporte • Fortinet", casesSupportStat:"Más de 2.000 casos cerrados • CSAT superior a 4,7 sobre 5 • más de 300 reseñas positivas", casesCsm:"Cuentas enterprise nombradas • Netskope", casesCsmStat:"Cerca de 60 cuentas nombradas • USD 6,2M de ARR • alrededor del 60% pasó de rojo a verde", casesAlso:"También en el escritorio", machinesLink:"Ver todas las máquinas de práctica por nombre", portraitCap:"Ingeniero de seguridad • Customer success • Colombia",
+    contactTitle:"Próxima estación: tu equipo.",
+    contactText:"Busco mi próximo rol como Technical Account Manager, Customer Engineer, Customer Success Manager técnico o Integration Engineer.",
+    copy:"Copiar correo", copied:"Copiado", copyFail:"Selecciona la dirección para copiarla", write:"Escríbeme",
+    footNumbers:"Cada número de esta página sale de mi propio historial laboral.", footScale:"Diagrama sin escala.",
+    terminusText:"Aquí es hacia donde van las dos líneas. Los datos de contacto están al final de la línea.", terminusCta:"Ir al contacto", showAll:"Ver las {n} pruebas de esta parada", showLess:"Ver menos"
+  },
+  pt:{
+    role:"Engenheiro de segurança • Customer success", navContact:"Contato",
+    headline:"Depuro a captura de pacotes e mantenho a conta renovando.",
+    lede:"<strong>Cinco anos</strong> em segurança de redes e pós-venda em NAM, LATAM e Brasil: <strong>dois anos e quatro meses</strong> resolvendo escalonamentos de FortiOS na Fortinet e depois <strong>dois anos</strong> à frente de contas na Netskope. OSCP, NSE 7, CCNA.",
+    legTech:"Linha técnica", legCust:"Linha de cliente", legCert:"Linha de certificação • laboratório e exame",
+    hint:"Selecione uma estação para ver as provas dessa parada.", custOpens:"Abre a linha de cliente • 2024",
+    fortiValue:"2 anos 4 meses com FortiOS", nsValue:"+$900k TCV • carteira de 2,000+ contas",
+    depot:"Oficina", depotSub:"Python • ferramentas de IA", nextStation:"Próxima estação", yourTeam:"Sua equipe",
+    tier_prod:"Em produção", tier_lab:"Laboratório e exame", tier_academic:"Acadêmico", tier_tool:"Ferramenta própria",
+    recordTitle:"Registro de serviço", recordIntro:"Cada número aqui é exatamente o do meu histórico, com o lugar onde aconteceu.",
+    thResult:"Resultado", thWhere:"Onde", thLine:"Linha", thService:"Serviço",
+    guideTitle:"O que roda em cada linha",
+    certTitle:"Linha de certificação", certIntro:"Obtidas em ambientes de laboratório e exame. Cada certificação ofensiva terminou em um relatório de pentest escrito e completo.",
+    certOffensive:"Segurança ofensiva", certNetworking:"Redes", certCS:"Customer success",
+    eduTitle:"Formação", eeDegree:"Graduação em Engenharia Elétrica e Eletrônica",
+    depotIntro:"Na Netskope, cerca de um terço do meu tempo ia para construir as ferramentas com que eu trabalhava. São ferramentas próprias, sem repositório público; posso mostrá-las numa videochamada.",
+    langTitle:"Avisos do serviço", logTitle:"Diário de treinamento", handsTitle:"Prática real", handsIntro:"Com o que realmente trabalho, e as técnicas que pratiquei em mais de 170 máquinas até virarem rotina.", labTitle:"O que decifrei no laboratório", labIntro:"Não me declaro especialista nestas tecnologias. Cada máquina de prática rodava algo diferente, então em cada caso me sentei com a documentação e o código até entender como funcionava, o suficiente para encontrar onde falhava. O que trago é esse método, não o domínio de cada produto.", skillsTitle:"Habilidades de red team", skillsIntro:"O que precisei dominar para resolver os laboratórios e os três exames. Tudo aprendido e comprovado em ambientes de laboratório e exame, e documentado em relatórios completos.", logIntro:"As horas de laboratório por trás da linha de certificação, de ago 2023 a mai 2024. Só nomes e quantidades: o conteúdo dos exames e dos Pro Labs fica privado, como as plataformas exigem.", thWhen:"Quando", thWork:"Trabalho", thScale:"Escala", depotLabHead:"Ferramentas de laboratório que escrevi estudando", depotRepo:"Código no GitHub", modeExec:"Executivo", modeFull:"Detalhe", ctaTitle:"Esta é a versão curta.", ctaText:"O detalhe completo soma todos os casos de suporte e de CSM, o diário de treinamento, as habilidades de red team e as tecnologias por trás, as ferramentas que construí e os idiomas em que trabalho.", ctaBtn:"Ver todo o detalhe técnico", casesTitle:"Casos de campo", casesIntro:"Como os números eram de perto. Cada caso é um padrão que encontrei com frequência, e como o resolvi.", casesSupport:"Suporte • Fortinet", casesSupportStat:"Mais de 2.000 casos fechados • CSAT acima de 4,7 de 5 • mais de 300 avaliações positivas", casesCsm:"Contas enterprise nomeadas • Netskope", casesCsmStat:"Cerca de 60 contas nomeadas • USD 6,2M de ARR • cerca de 60% passaram do vermelho ao verde", casesAlso:"Também na mesa", machinesLink:"Ver todas as máquinas de prática por nome", portraitCap:"Engenheiro de segurança • Customer success • Colômbia",
+    contactTitle:"Próxima estação: sua equipe.",
+    contactText:"Busco minha próxima função como Technical Account Manager, Customer Engineer, Customer Success Manager técnico ou Integration Engineer.",
+    copy:"Copiar e-mail", copied:"Copiado", copyFail:"Selecione o endereço para copiá-lo", write:"Escreva para mim",
+    footNumbers:"Cada número desta página vem do meu próprio histórico profissional.", footScale:"Diagrama fora de escala.",
+    terminusText:"É para cá que as duas linhas seguem. Os dados de contato estão no fim da linha.", terminusCta:"Ir para o contato", showAll:"Ver as {n} provas desta parada", showLess:"Ver menos"
+  }
+};
+
+/* proof helper: p(tier, en, es, pt) */
+function p(tier,en,es,pt){return {tier:tier,t:{en:en,es:es,pt:pt}};}
+function L(en,es,pt){return {en:en,es:es||en,pt:pt||es||en};}
+
+var S = {
+  unimag:{lines:["tech"], name:L("Universidad del Magdalena"),
+    title:L("Engineer's Degree, Electrical and Electronics Engineering","Ingeniería Eléctrica y Electrónica (título de ingeniero)","Graduação em Engenharia Elétrica e Eletrônica"),
+    when:L("2017 – 2023 • Santa Marta, Colombia"),
+    groups:[{proofs:[
+      p("academic","The programming foundation I now use to read JavaScript, PHP, Python and Bash.","La base de programación con la que hoy leo JavaScript, PHP, Python y Bash.","A base de programação com a qual hoje leio JavaScript, PHP, Python e Bash."),
+      p("academic","Sent JSON from IoT devices to cloud services.","Envié datos JSON desde dispositivos IoT a servicios en la nube.","Enviei dados JSON de dispositivos IoT para serviços em nuvem."),
+      p("academic","Built a Docker Compose metrics pipeline (RabbitMQ, InfluxDB, Grafana) as coursework.","Monté un pipeline de métricas con Docker Compose (RabbitMQ, InfluxDB, Grafana) como trabajo de curso.","Montei um pipeline de métricas com Docker Compose (RabbitMQ, InfluxDB, Grafana) como trabalho acadêmico.")
+    ]}]},
+  sykes:{lines:["tech"], name:L("SYKES LATAM"),
+    title:L("Cisco TAC Security AAA/ISE Engineer"),
+    when:L("Oct 2021 – May 2022 • Barranquilla, Colombia","Oct 2021 – May 2022 • Barranquilla, Colombia","Out 2021 – Mai 2022 • Barranquilla, Colômbia"),
+    groups:[{proofs:[
+      p("prod","Searched and correlated Cisco ISE logs with the platform's own analysis tools.","Busqué y correlacioné logs de Cisco ISE con las herramientas de análisis de la plataforma.","Pesquisei e correlacionei logs do Cisco ISE com as ferramentas de análise da plataforma."),
+      p("prod","Troubleshot Cisco WLC wireless, mostly 802.1X setups.","Resolví fallas de wireless en Cisco WLC, sobre todo configuraciones 802.1X.","Resolvi falhas de wireless no Cisco WLC, principalmente configurações 802.1X."),
+      p("prod","Mentored and onboarded new engineers through structured training sessions.","Fui mentor de ingenieros nuevos y los integré con sesiones de formación estructuradas.","Fui mentor de novos engenheiros e os integrei com sessões de treinamento estruturadas.")
+    ]}]},
+  fortinet:{lines:["tech"], name:L("Fortinet"),
+    title:L("Technical Support Engineer P3"),
+    when:L("May 2022 – Aug 2024 • NAM • LATAM","May 2022 – Ago 2024 • NAM • LATAM","Mai 2022 – Ago 2024 • NAM • LATAM"),
+    value:"fortiValue",
+    groups:[{proofs:[
+      p("prod","Closed 2,000+ cases with a CSAT above 4.7 out of 5 and more than 300 positive customer reviews.","Cerré más de 2.000 casos con un CSAT superior a 4,7 sobre 5 y más de 300 reseñas positivas de clientes.","Fechei mais de 2.000 casos com CSAT acima de 4,7 de 5 e mais de 300 avaliações positivas de clientes."),
+      p("prod","Established root cause on escalated FortiOS cases from configurations, topologies and packet captures.","Encontré la causa raíz de casos escalados de FortiOS a partir de configuraciones, topologías y capturas de paquetes.","Encontrei a causa raiz de casos escalonados de FortiOS a partir de configurações, topologias e capturas de pacotes."),
+      p("prod","Reproduced customer scenarios with shared Terraform templates to validate a fix before recommending it.","Reproduje escenarios de clientes con plantillas compartidas de Terraform para validar cada solución antes de recomendarla.","Reproduzi cenários de clientes com templates compartilhados de Terraform para validar cada correção antes de recomendá-la."),
+      p("prod","Supported FortiGate HA designs in AWS and Azure, including route-table and elastic-IP failover.","Di soporte a diseños de alta disponibilidad de FortiGate en AWS y Azure, incluido el failover por tablas de rutas e IP elásticas.","Dei suporte a projetos de alta disponibilidade de FortiGate em AWS e Azure, incluindo failover por tabelas de rotas e IPs elásticos."),
+      p("prod","Troubleshot FortiClient remote-access and site-to-site IPsec VPN, VoIP trunks, and SNMP, NetFlow and Syslog feeds into customer SIEMs.","Resolví VPN de acceso remoto con FortiClient e IPsec site-to-site, troncales VoIP y envíos SNMP, NetFlow y Syslog hacia los SIEM de los clientes.","Resolvi VPN de acesso remoto com FortiClient e IPsec site-to-site, troncos VoIP e envios SNMP, NetFlow e Syslog para os SIEMs dos clientes.")
+    ]}]},
+  netskope:{lines:["tech","cust"], name:L("Netskope"),
+    title:L("Scale Customer Success Manager • Customer Success Manager, Named Enterprise Accounts"),
+    when:L("Aug 2024 – Sep 2026 • NAM • LATAM • Brazil","Ago 2024 – Sep 2026 • NAM • LATAM • Brasil","Ago 2024 – Set 2026 • NAM • LATAM • Brasil"),
+    value:"nsValue",
+    groups:[
+      {line:"cust", proofs:[
+        p("prod","Safeguarded more than $900k in Total Contract Value by resolving a hostile escalation into a license exchange rather than a churn event.","Protegí más de $900k en Valor Total de Contrato al convertir una escalación hostil en un intercambio de licencias, sin perder al cliente.","Protegi mais de $900k em Valor Total de Contrato ao transformar uma escalação hostil em uma troca de licenças, sem perder o cliente."),
+        p("prod","Built, with my team, the telemetry model that decides which of 2,000+ accounts need hands-on intervention.","Construí con mi equipo el modelo de telemetría que decide cuáles de las 2.000+ cuentas necesitan intervención directa.","Construí com meu time o modelo de telemetria que decide quais das 2.000+ contas precisam de intervenção direta."),
+        p("prod","Moved an account from below 50% to 70% utilisation by bringing in the resources a secure rollout needed.","Llevé una cuenta de menos del 50% al 70% de utilización, trayendo los recursos que necesitaba un despliegue seguro.","Levei uma conta de menos de 50% para 70% de utilização, trazendo os recursos que um rollout seguro precisava."),
+        p("prod","Ran QBRs and quarterly reporting in English, Spanish and Portuguese.","Dirigí QBRs y reportes trimestrales en inglés, español y portugués.","Conduzi QBRs e relatórios trimestrais em inglês, espanhol e português.")
+      ]},
+      {line:"tech", proofs:[
+        p("prod","Got my accounts to put guided DLP policies in place so they are alerted on risky data and AI activity; in a couple of them, unsanctioned AI traffic dropped to near zero.","Logré que mis cuentas implementaran de forma guiada políticas de DLP para recibir alertas ante actividad riesgosa de datos e IA; en un par de ellas, el tráfico de IA no autorizado bajó a casi cero.","Consegui que minhas contas implementassem de forma guiada políticas de DLP para receber alertas sobre atividade arriscada de dados e IA; em algumas delas, o tráfego de IA não autorizado caiu para quase zero."),
+        p("prod","Delivered dozens of tenant health checks with prioritised, measurable paths to a green state.","Entregué decenas de health checks de tenants, cada uno con una ruta priorizada y medible hacia el estado verde.","Entreguei dezenas de health checks de tenants, cada um com um caminho priorizado e mensurável até o estado verde."),
+        p("prod","Audited single-pass deployments and restructured Real-Time Protection rules to close policy bypasses.","Audité despliegues single-pass y reestructuré reglas de Real-Time Protection para cerrar evasiones de políticas.","Auditei implantações single-pass e reestruturei regras de Real-Time Protection para fechar desvios de políticas."),
+        p("prod","Rolled out the Netskope client to Windows and macOS through MDM, fixing Intune and Iru scripting issues.","Desplegué el cliente de Netskope en Windows y macOS vía MDM, resolviendo problemas de scripts en Intune e Iru.","Implantei o cliente Netskope em Windows e macOS via MDM, resolvendo problemas de scripts no Intune e no Iru.")
+      ]}
+    ]},
+  depot:{lines:["depot"], name:L("Workshop depot","Taller","Oficina"),
+    title:L("Python and AI tooling I built for my own work","Herramientas en Python e IA que construí para mi propio trabajo","Ferramentas em Python e IA que construí para o meu próprio trabalho"),
+    when:L("Personal tools • live walkthrough on request","Herramientas propias • demo en vivo a pedido","Ferramentas próprias • demonstração ao vivo sob pedido"),
+    groups:[{proofs:[
+      p("tool","A duplicate-username detector for license-utilisation analysis.","Un detector de nombres de usuario duplicados para analizar la utilización de licencias.","Um detector de nomes de usuário duplicados para analisar a utilização de licenças."),
+      p("tool","A generator that turns tenant health-report HTML into presentation-ready PDFs.","Un generador que convierte el HTML de los reportes de salud del tenant en PDFs listos para presentar.","Um gerador que transforma o HTML dos relatórios de saúde do tenant em PDFs prontos para apresentação."),
+      p("tool","Agent-based activity trackers that review the week's account touches and return an execution-ready summary.","Agentes que revisan las cuentas atendidas en la semana y entregan un resumen listo para ejecutar.","Agentes que revisam as contas atendidas na semana e entregam um resumo pronto para execução."),
+      p("tool","A Google Workspace workflow that turns a flooded inbox into assigned action items.","Un flujo en Google Workspace que convierte una bandeja de entrada desbordada en tareas asignadas.","Um fluxo no Google Workspace que transforma uma caixa de entrada lotada em tarefas atribuídas.")
+    ]},{head:"depotLabHead", repo:"https://github.com/jose00735/Security-Scripts", proofs:[
+      p("lab","A FortiGate policy-sync script: compares two configurations by policy ID and checksum and prints the CLI block for only the policies that differ.","Un script de sincronización de políticas FortiGate: compara dos configuraciones por ID de política y checksum, e imprime el bloque CLI solo con las políticas que difieren.","Um script de sincronização de políticas FortiGate: compara duas configurações por ID de política e checksum e imprime o bloco CLI só com as políticas diferentes."),
+      p("lab","Three blind SQL injection extractors (boolean, error and time based) for the PortSwigger labs.","Tres extractores de blind SQL injection (por respuesta, por error y por tiempo) para los labs de PortSwigger.","Três extratores de blind SQL injection (por resposta, por erro e por tempo) para os labs da PortSwigger."),
+      p("lab","A process-diff monitor that surfaces commands run by other users during privilege escalation, and a two-stage nmap wrapper.","Un monitor de procesos que muestra los comandos de otros usuarios durante una escalada de privilegios, y un wrapper de nmap en dos etapas.","Um monitor de processos que mostra os comandos de outros usuários durante uma escalada de privilégios, e um wrapper de nmap em duas etapas."),
+      p("lab","An FTP load generator that pushes parallel downloads through a firewall under test.","Un generador de carga FTP que empuja descargas en paralelo a través de un firewall en pruebas.","Um gerador de carga FTP que envia downloads em paralelo através de um firewall em teste.")
+    ]}]},
+  ccna:{lines:["cert"], name:L("CCNA"), title:L("Cisco Certified Network Associate (CCNA)"), when:L("Cisco"),
+    groups:[{proofs:[
+      p("lab","Networking certification behind the Cisco TAC work at SYKES and the routing and switching cases at Fortinet.","Certificación de redes detrás del trabajo en Cisco TAC en SYKES y de los casos de enrutamiento y switching en Fortinet.","Certificação de redes por trás do trabalho no Cisco TAC na SYKES e dos casos de roteamento e switching na Fortinet.")
+    ]}]},
+  nse:{lines:["cert"], name:L("NSE 7 • NSE 4"), title:L("Fortinet: NSE 7 – Network Security Architect • NSE 4 – Network Security Professional"), when:L("Fortinet",null,null),
+    groups:[{proofs:[
+      p("lab","Plus seven specialist certifications: SASE, SD-WAN 7.0 Architect, FortiSOAR, FortiEDR 5.0, FortiSIEM 6.3, and AWS and Azure Cloud Security 7.0.","Más siete certificaciones de especialista: SASE, SD-WAN 7.0 Architect, FortiSOAR, FortiEDR 5.0, FortiSIEM 6.3 y Cloud Security 7.0 para AWS y Azure.","Mais sete certificações de especialista: SASE, SD-WAN 7.0 Architect, FortiSOAR, FortiEDR 5.0, FortiSIEM 6.3 e Cloud Security 7.0 para AWS e Azure.")
+    ]}]},
+  oscp:{lines:["cert"], name:L("OSCP"), title:L("OffSec Certified Professional (OSCP)"), when:L("Penetration testing","Pentesting","Pentest"),
+    groups:[{proofs:[
+      p("lab","Wrote full penetration-test reports with executive summaries, risk ratings, proof-of-concept per finding and prioritised remediation.","Escribí reportes de pentest completos con resumen ejecutivo, calificación de riesgo, prueba de concepto por hallazgo y remediación priorizada.","Escrevi relatórios de pentest completos com resumo executivo, classificação de risco, prova de conceito por achado e remediação priorizada."),
+      p("lab","Read JavaScript, PHP, Python and Bash code to find and exploit weaknesses; used Burp Suite to inspect HTTP in authorised testing.","Leí código JavaScript, PHP, Python y Bash para encontrar y explotar debilidades; usé Burp Suite para inspeccionar HTTP en pruebas autorizadas.","Li código JavaScript, PHP, Python e Bash para encontrar e explorar fraquezas; usei Burp Suite para inspecionar HTTP em testes autorizados.")
+    ]}]},
+  crte:{lines:["cert"], name:L("CRTP • CRTE"), title:L("Certified Red Team Professional (CRTP) • Certified Red Team Expert (CRTE)"), when:L("Active Directory • red team"),
+    groups:[{proofs:[
+      p("lab","Traversed multi-domain Active Directory forests to Enterprise Admin, each path documented with its remediation.","Recorrí bosques de Active Directory multidominio hasta Enterprise Admin, documentando cada ruta con su remediación.","Percorri florestas de Active Directory multidomínio até Enterprise Admin, documentando cada caminho com sua remediação."),
+      p("lab","Documented endpoint-monitoring gaps (unprotected LSASS, unflagged tooling, undetected reverse shells) with a fix for each.","Documenté fallas de monitoreo de endpoints (LSASS sin protección, herramientas sin alertas, reverse shells sin detectar) con la corrección de cada una.","Documentei falhas de monitoramento de endpoints (LSASS sem proteção, ferramentas sem alerta, reverse shells não detectados) com a correção de cada uma.")
+    ]}]},
+  terminus:{lines:["tech","cust"], name:L("Your team","Tu equipo","Sua equipe"), title:L("Next station","Próxima estación","Próxima estação"), when:L("2026 →"), terminus:true, groups:[]}
+};
+
+var RECORD = [
+  {res:L("2,000+ cases closed with a CSAT above 4.7 out of 5 and 300+ positive customer reviews","Más de 2.000 casos cerrados con un CSAT superior a 4,7 sobre 5 y más de 300 reseñas positivas","Mais de 2.000 casos fechados com CSAT acima de 4,7 de 5 e mais de 300 avaliações positivas"), where:"Fortinet", lines:["tech"], tier:"prod"},
+  {res:L("A named book of roughly 60 enterprise accounts worth $6.2M in ARR, about 60% moved from red to green","Una cartera de unas 60 cuentas enterprise nombradas con USD 6,2M de ARR, cerca del 60% llevado de rojo a verde","Uma carteira de umas 60 contas enterprise nomeadas com USD 6,2M de ARR, cerca de 60% levadas do vermelho ao verde"), where:"Netskope", lines:["cust"], tier:"prod"},
+  {res:L("More than $900k in Total Contract Value safeguarded by turning a hostile escalation into a license exchange","Más de $900k en Valor Total de Contrato protegidos al convertir una escalación hostil en un intercambio de licencias","Mais de $900k em Valor Total de Contrato protegidos ao transformar uma escalação hostil em uma troca de licenças"), where:"Netskope", lines:["cust"], tier:"prod"},
+  {res:L("2,000+ accounts scored by the telemetry model my team and I built to decide where hands-on time goes","2,000+ cuentas evaluadas por el modelo de telemetría que construí con mi equipo para decidir dónde invertir el trabajo directo","2,000+ contas avaliadas pelo modelo de telemetria que construí com meu time para decidir onde investir o trabalho direto"), where:"Netskope", lines:["cust"], tier:"prod"},
+  {res:L("From below 50% to 70% utilisation on an under-deployed account","De menos del 50% al 70% de utilización en una cuenta subdesplegada","De menos de 50% para 70% de utilização em uma conta subimplantada"), where:"Netskope", lines:["cust"], tier:"prod"},
+  {res:L("Guided DLP alerting in place across my accounts, with unsanctioned AI traffic cut to near zero in a couple of them","DLP guiado con alertas en mis cuentas, y tráfico de IA no autorizado reducido a casi cero en un par de ellas","DLP guiado com alertas nas minhas contas, e tráfego de IA não autorizado reduzido a quase zero em algumas delas"), where:"Netskope", lines:["tech","cust"], tier:"prod"},
+  {res:L("Dozens of tenant health checks, each with a prioritised path to green","Decenas de health checks de tenants, cada uno con una ruta priorizada hacia el verde","Dezenas de health checks de tenants, cada um com um caminho priorizado até o verde"), where:"Netskope", lines:["tech","cust"], tier:"prod"},
+  {res:L("Two years and four months of hands-on FortiOS escalations, worked to root cause","Dos años y cuatro meses de escalamientos de FortiOS en la práctica, resueltos hasta la causa raíz","Dois anos e quatro meses de escalonamentos de FortiOS na prática, resolvidos até a causa raiz"), where:"Fortinet", lines:["tech"], tier:"prod"},
+  {res:L("150+ machines from TJnull's OSCP list, plus the Hack The Box Pro Labs Dante and RastaLabs, both completed","150+ máquinas de la lista OSCP de TJnull, más los Hack The Box Pro Labs Dante y RastaLabs, ambos completados","150+ máquinas da lista OSCP do TJnull, mais os Hack The Box Pro Labs Dante e RastaLabs, ambos concluídos"), where:"Hack The Box • Proving Grounds", lines:["cert"], tier:"lab"},
+  {res:L("Three full penetration-test reports with executive summaries and prioritised remediation","Tres reportes de pentest completos con resumen ejecutivo y remediación priorizada","Três relatórios de pentest completos com resumo executivo e remediação priorizada"), where:"OSCP • CRTE • CRTP", lines:["cert"], tier:"lab"}
+];
+
+var LOG = [
+  {when:L("Aug 2023","Ago 2023","Ago 2023"), work:L("Hack The Box Starting Point and beginner track","Hack The Box Starting Point y beginner track","Hack The Box Starting Point e beginner track"), scale:L("32 machines","32 máquinas","32 máquinas")},
+  {when:L("Aug – Sep 2023","Ago – Sep 2023","Ago – Set 2023"), work:L("PortSwigger Web Security Academy: blind SQL injection, with my own extraction scripts (boolean, error and time based)","PortSwigger Web Security Academy: blind SQL injection, con mis propios scripts de extracción (por respuesta, por error y por tiempo)","PortSwigger Web Security Academy: blind SQL injection, com meus próprios scripts de extração (por resposta, por erro e por tempo)"), scale:L("3 scripts","3 scripts","3 scripts")},
+  {when:L("2023 – 2024"), work:L("TJnull's OSCP preparation list on Hack The Box and Proving Grounds","Lista de preparación OSCP de TJnull en Hack The Box y Proving Grounds","Lista de preparação OSCP do TJnull no Hack The Box e Proving Grounds"), scale:L("150+ machines","150+ máquinas","150+ máquinas")},
+  {when:L("Jan – Feb 2024","Ene – Feb 2024","Jan – Fev 2024"), work:L("FortiGate lab: private CA, inbound SSL inspection against an nginx server in Docker, admin GUI certificates with IP SANs, and a script that syncs differing firewall policies between two units","Lab de FortiGate: CA privada, inspección SSL entrante contra un servidor nginx en Docker, certificados de la GUI con SANs por IP y un script que sincroniza las políticas que difieren entre dos equipos","Lab de FortiGate: CA privada, inspeção SSL de entrada contra um servidor nginx em Docker, certificados da GUI com SANs por IP e um script que sincroniza as políticas diferentes entre dois equipamentos"), scale:L("Own lab","Lab propio","Lab próprio")},
+  {when:L("Mar 2024"), work:L("Hack The Box Pro Labs: Dante and RastaLabs (enterprise Active Directory networks)","Hack The Box Pro Labs: Dante y RastaLabs (redes empresariales con Active Directory)","Hack The Box Pro Labs: Dante e RastaLabs (redes corporativas com Active Directory)"), scale:L("Both completed","Ambos completados","Ambos concluídos")},
+  {when:L("Apr – May 2024","Abr – May 2024","Abr – Mai 2024"), work:L("CRTP, OSCP and CRTE exams, each closed with a full written report","Exámenes CRTP, OSCP y CRTE, cada uno cerrado con un reporte escrito completo","Exames CRTP, OSCP e CRTE, cada um fechado com um relatório escrito completo"), scale:L("3 certifications","3 certificaciones","3 certificações")},
+  {when:L("May 2024","May 2024","Mai 2024"), work:L("Home Active Directory lab to rehearse Kerberos ticket abuse, IPv6 DNS takeover with mitm6 and NTDS credential extraction","Lab de Active Directory en casa para practicar abuso de tickets Kerberos, toma de DNS por IPv6 con mitm6 y extracción de credenciales del NTDS","Lab de Active Directory em casa para praticar abuso de tickets Kerberos, tomada de DNS via IPv6 com mitm6 e extração de credenciais do NTDS"), scale:L("Own lab","Lab propio","Lab próprio")}
+];
+
+var SKILLS = [
+  {n:L("Fundamentals","Fundamentos","Fundamentos"), items:[
+    L("TCP/IP, routing and NAT","TCP/IP, enrutamiento y NAT","TCP/IP, roteamento e NAT"),
+    L("DNS, HTTP and TLS"),
+    L("Windows internals and services","Internos y servicios de Windows","Internos e serviços do Windows"),
+    L("Linux administration","Administración de Linux","Administração de Linux"),
+    L("Active Directory, LDAP and Kerberos","Active Directory, LDAP y Kerberos","Active Directory, LDAP e Kerberos"),
+    L("SMB, MSSQL, WinRM and SNMP"),
+    L("Hashing and authentication protocols","Hashing y protocolos de autenticación","Hashing e protocolos de autenticação")
+  ]},
+  {n:L("Domains","Dominios","Domínios"), items:[
+    L("Active Directory security assessment","Evaluación de seguridad de Active Directory","Avaliação de segurança de Active Directory"),
+    L("Kerberos delegation and ticket attacks","Ataques de delegación y tickets Kerberos","Ataques de delegação e tickets Kerberos"),
+    L("Web application testing","Pruebas de aplicaciones web","Testes de aplicações web"),
+    L("Windows and Linux privilege escalation","Escalada de privilegios en Windows y Linux","Escalada de privilégios em Windows e Linux"),
+    L("Credential access and its detection gaps","Acceso a credenciales y sus brechas de detección","Acesso a credenciais e suas lacunas de detecção"),
+    L("Pivoting across segmented networks","Pivoting entre redes segmentadas","Pivoting entre redes segmentadas"),
+    L("Endpoint defence evasion, documented as findings","Evasión de defensas de endpoint, documentada como hallazgo","Evasão de defesas de endpoint, documentada como achado"),
+    L("Pentest reporting with risk ratings and remediation","Reportes de pentest con calificación de riesgo y remediación","Relatórios de pentest com classificação de risco e remediação")
+  ]},
+  {n:L("Tools","Herramientas","Ferramentas"), items:[
+    L("Nmap"), L("Burp Suite"), L("ffuf • feroxbuster • Gobuster"), L("BloodHound • SharpHound"), L("PowerView • AD Module"), L("PowerUp • PowerUpSQL"), L("WinPEAS • LinPEAS"), L("Rubeus"), L("Mimikatz • SafetyKatz"), L("Impacket"), L("Certify"), L("hashcat • John the Ripper"), L("ligolo-ng • Chisel • socat"), L("PingCastle"), L("mitm6"), L("InviShell")
+  ]},
+  {n:L("Scripting","Scripting","Scripting"), items:[
+    L("Python (requests, pwntools): my main language","Python (requests, pwntools): mi lenguaje principal","Python (requests, pwntools): minha linguagem principal"), L("Bash and PowerShell for lab tasks","Bash y PowerShell para tareas de laboratorio","Bash e PowerShell para tarefas de laboratório"), L("Reading JavaScript and PHP","Lectura de JavaScript y PHP","Leitura de JavaScript e PHP")
+  ]}
+];
+
+var STACK = [
+  {tier:"hands", n:L("Language and systems I work with","Lenguaje y sistemas con los que trabajo","Linguagem e sistemas com que trabalho"), items:["Python","Windows 10","Windows Server","Ubuntu","Debian"]},
+  {tier:"hands", n:L("Network services and protocols","Servicios y protocolos de red","Serviços e protocolos de rede"), items:["FTP","SSH","Telnet","SMB • Samba","NFS","rsync","SNMP","DNS zone transfers","SMTP • IMAP • POP3","finger","RPC • rpcbind","IPsec • IKE","SIP","IPMI","RDP • WinRM","HTTP/3 • QUIC","UPnP","Wi-Fi WPS"]},
+  {tier:"hands", n:L("Web vulnerability classes","Clases de vulnerabilidades web","Classes de vulnerabilidades web"), items:["SQL injection (incl. blind)","NoSQL injection","LDAP injection","Template injection (Jinja, ERB)","XSS","CSRF","SSRF","LFI • path traversal","File upload","Deserialization (Java, Ruby, .NET)","Command injection","Parameter pollution","ESI injection","Default credentials"]},
+  {tier:"hands", n:L("Linux privilege escalation","Escalada de privilegios en Linux","Escalada de privilégios em Linux"), items:["sudo rules","SUID • capabilities","cron • systemd timers","PATH hijacking","Python library hijacking","LD_PRELOAD","tar wildcards","Docker • LXD groups","polkit • D-Bus","journalctl • pagers","Kernel exploits","Restricted shells"]},
+  {tier:"hands", n:L("Windows privilege escalation","Escalada de privilegios en Windows","Escalada de privilégios em Windows"), items:["Service misconfiguration","SeImpersonate • Potato family","SeLoadDriver • SeDebug","AlwaysInstallElevated","Stored credentials • DPAPI","GPP passwords","LAPS • gMSA","AD CS certificate templates","Registry hives","WSL","PowerShell SecureString"]},
+  {tier:"lab", n:L("Languages I read and analysed","Lenguajes que leí y analicé","Linguagens que li e analisei"), items:["PHP","Ruby • Rails • ERB","Node.js • Express","Java • JSP","ASP.NET • .NET","Lua","SQL"]},
+  {tier:"lab", n:L("Web platforms and CMS","Plataformas web y CMS","Plataformas web e CMS"), items:["WordPress","Drupal","Joomla","Magento","Umbraco","Bludit","PluXml","FlatPress","Grav","CuteNews","Bolt CMS","Strapi • Laravel","Spring Boot","Flask • Werkzeug","Tornado","CherryPy • pyLoad","ColdFusion","osTicket","SuiteCRM","SeedDMS","OpenNetAdmin"]},
+  {tier:"lab", n:L("Application servers and DevOps","Servidores de aplicación y DevOps","Servidores de aplicação e DevOps"), items:["Apache • nginx • IIS","Tomcat","Jetty","Jenkins","GitLab","Gitea • GitBucket","Subversion","Docker • LXD","SaltStack • ZeroMQ","ZooKeeper Exhibitor","Supervisor","Ansible","MinIO","HashiCorp Vault","Apache OFBiz"]},
+  {tier:"lab", n:L("Monitoring, admin and comms","Monitoreo, administración y comunicaciones","Monitoramento, administração e comunicações"), items:["Nagios XI • NSCA","Zabbix","PRTG","Webmin","NSClient++","Rocket.Chat","Mattermost","Openfire • XMPP","Asterisk • FreePBX • Elastix","FreeSWITCH","Mercury mail","OpenPLC","Plex • Pi-hole"]},
+  {tier:"lab", n:L("Databases and data stores","Bases de datos y almacenamiento","Bancos de dados e armazenamento"), items:["MySQL • MariaDB","PostgreSQL","Microsoft SQL Server","Oracle (TNS)","MongoDB","Redis","SQLite","H2","Cassandra"]},
+  {tier:"lab", n:L("Other operating systems","Otros sistemas operativos","Outros sistemas operacionais"), items:["Windows XP and 7","Windows IoT Core","CentOS","FreeBSD","NetBSD","Solaris","pfSense","Raspberry Pi OS"]},
+  {tier:"lab", n:L("Binary, reversing and forensics","Binarios, reversing y forense","Binários, reversing e forense"), items:["Stack buffer overflows","ret2libc • ROP","Java and .NET decompiling","Memory dumps","Packet captures","VHD backups","PST • MDB files","Cisco config passwords","Git history","Steganography","Esoteric encodings"]}
+];
+
+var CASES = {
+  support:[
+    {h:L("Requirements into SD-WAN","De requerimientos a SD-WAN","De requisitos a SD-WAN"),
+     t:L("Translated what customers needed into working SD-WAN: rule precedence against policy routes, weights and load-balancing algorithms, ISP failover, and steering chosen traffic to a chosen link.","Traducía lo que el cliente necesitaba en un SD-WAN funcional: precedencia de reglas frente a policy routes, pesos y algoritmos de balanceo, failover entre ISPs y enviar cierto tráfico por un enlace específico.","Traduzia o que o cliente precisava em um SD-WAN funcional: precedência de regras frente a policy routes, pesos e algoritmos de balanceamento, failover entre ISPs e enviar certo tráfego por um link específico.")},
+    {h:L("HA clusters back in sync","Clústeres HA sincronizados de nuevo","Clusters HA sincronizados de novo"),
+     t:L("Recovered many split-brain clusters by comparing configuration checksums and re-syncing by hand, including cloud clusters where the secondary unit was reachable only through the heartbeat interface.","Recuperé muchos clústeres en split-brain comparando los checksums de configuración y resincronizando a mano, incluso en la nube, donde al equipo secundario solo se llegaba por la interfaz de heartbeat.","Recuperei muitos clusters em split-brain comparando os checksums de configuração e ressincronizando manualmente, inclusive na nuvem, onde o equipamento secundário só era acessível pela interface de heartbeat.")},
+    {h:L("A bug only development could close","Un bug que solo desarrollo podía cerrar","Um bug que só o desenvolvimento podia fechar"),
+     t:L("Traced an SD-WAN case where duplicating traffic across three ISPs over VPN failed only under specific SLA settings, then brought in development to fix it.","Rastreé un caso de SD-WAN en el que duplicar tráfico por tres ISPs sobre VPN fallaba solo con ciertos SLA, y llevé el caso a desarrollo para corregirlo.","Rastreei um caso de SD-WAN em que duplicar o tráfego por três ISPs sobre VPN falhava só com certos SLAs, e levei o caso ao desenvolvimento para corrigir.")},
+    {h:L("Why did that policy match?","¿Por qué hizo match esa política?","Por que essa política deu match?"),
+     t:L("Debug flow was my main tool to show customers which policy and route decided their traffic, and whether a session was offloaded to the NPU or not.","Debug flow era mi herramienta principal para mostrarle al cliente qué política y qué ruta decidían su tráfico, y si la sesión se descargaba al NPU o no.","O debug flow era minha ferramenta principal para mostrar ao cliente qual política e qual rota decidiam o tráfego, e se a sessão era descarregada para o NPU ou não.")},
+    {h:L("The NAT go-to on my team","El de referencia en NAT en mi equipo","A referência em NAT no meu time"),
+     t:L("Teammates came to me with NAT questions: where DNAT happens relative to SNAT and routing, why a VIP changes how a policy allows or blocks, and when central NAT makes sense.","Mis compañeros me consultaban sobre NAT: en qué punto ocurre el DNAT frente al SNAT y al ruteo, por qué un VIP cambia cómo una política permite o bloquea, y cuándo conviene central NAT.","Meus colegas me consultavam sobre NAT: em que ponto acontece o DNAT em relação ao SNAT e ao roteamento, por que um VIP muda como uma política permite ou bloqueia, e quando vale usar central NAT.")},
+    {h:L("BGP and OSPF neighbours that wouldn't cooperate","Vecinos BGP y OSPF que no cooperaban","Vizinhos BGP e OSPF que não cooperavam"),
+     t:L("Read routing debugs and the packets in Wireshark to show where an adjacency broke; most of the time the neighbour wasn't sending the right information.","Leía los debugs de ruteo y los paquetes en Wireshark para mostrar dónde se rompía la adyacencia; casi siempre el vecino no enviaba la información correcta.","Lia os debugs de roteamento e os pacotes no Wireshark para mostrar onde a adjacência quebrava; quase sempre o vizinho não enviava a informação correta.")},
+    {h:L("Memory pressure, solved at the policy","Presión de memoria, resuelta en la política","Pressão de memória, resolvida na política"),
+     t:L("Cut memory use by moving policies from proxy-based to flow-based inspection wherever proxy mode wasn't needed, so more traffic stayed on the NPU.","Bajé el uso de memoria pasando a inspección flow-based las políticas que no necesitaban proxy, para que más tráfico se quedara en el NPU.","Reduzi o uso de memória passando para inspeção flow-based as políticas que não precisavam de proxy, para que mais tráfego ficasse no NPU.")},
+    {h:L("Deep inspection, explained and deployed","Deep inspection, explicada y desplegada","Deep inspection, explicada e implantada"),
+     t:L("Most customers didn't know what SSL deep inspection did; I taught them, and showed how to roll it out across the estate by distributing the CA certificate through Group Policy.","La mayoría de los clientes no sabía qué hacía la inspección SSL profunda; se lo enseñaba y les mostraba cómo desplegarla en todo su entorno distribuyendo el certificado de la CA por GPO.","A maioria dos clientes não sabia o que a inspeção SSL profunda fazia; eu ensinava e mostrava como implantá-la em todo o ambiente distribuindo o certificado da CA por GPO.")},
+    {h:L("The steady hand on HA upgrades","La mano experta en upgrades de HA","A mão experiente em upgrades de HA"),
+     t:L("Walked customers through HA firmware upgrades step by step, with a configuration backup ready and a manual upgrade over console when the online path failed.","Acompañaba los upgrades de firmware en HA paso a paso, con un backup de configuración listo y upgrade manual por consola cuando la vía en línea fallaba.","Acompanhava os upgrades de firmware em HA passo a passo, com backup da configuração pronto e upgrade manual pelo console quando o caminho online falhava.")},
+    {h:L("Firewall offline, back over console","Firewall sin internet, recuperado por consola","Firewall sem internet, recuperado pelo console"),
+     t:L("When a bad route cut a FortiGate off, I guided the customer in over console, set up a TFTP server when needed, and fixed the static routes live.","Cuando una ruta mal configurada dejaba un FortiGate sin conectividad, guiaba al cliente por consola, montaba un servidor TFTP cuando hacía falta y corregía las rutas estáticas en vivo.","Quando uma rota mal configurada deixava um FortiGate sem conectividade, guiava o cliente pelo console, montava um servidor TFTP quando necessário e corrigia as rotas estáticas ao vivo.")}
+  ],
+  supportAlso:["QoS for VoIP over SD-WAN","MSS for dropping downloads","Asymmetric routing in cloud","LDAP group mapping","IPS in alert mode first","FortiGuard re-rating","FortiGuard connectivity","FortiToken recovery","FortiClient EMS certificates","Explicit proxy","FortiLink onboarding","VLAN tagging","FortiSwitch firmware","Local-in policies","DNS and DoH","FortiAuthenticator","FortiWeb"],
+  csm:[
+    {h:L("Red to green, with the C-level in the room","De rojo a verde, con el C-level en la sala","Do vermelho ao verde, com o C-level na sala"),
+     t:L("Moved around 60% of my named accounts from red to green as they put to work what they had paid for. QBRs with C-level, VPs and main stakeholders on where they were heading made most renewals easier.","Llevé cerca del 60% de mis cuentas nombradas de rojo a verde, a medida que usaban lo que habían pagado. Los QBRs con C-level, VPs y stakeholders principales sobre hacia dónde iban facilitaron la mayoría de las renovaciones.","Levei cerca de 60% das minhas contas nomeadas do vermelho ao verde, conforme passavam a usar o que tinham pago. Os QBRs com C-level, VPs e stakeholders principais sobre para onde iam facilitaram a maioria das renovações.")},
+    {h:L("A new security team, a fresh start","Un equipo de seguridad nuevo, un nuevo comienzo","Um time de segurança novo, um novo começo"),
+     t:L("A team that wanted Netskope out over DLP issues went silent for months and was then replaced. I opened with a health check for the new team and we followed it together: more than half the seats in use within six weeks.","Un equipo que quería sacar a Netskope por problemas con DLP dejó de responder por meses y luego fue reemplazado. Abrí con un health check para el equipo nuevo y lo seguimos juntos: más de la mitad de las licencias en uso en seis semanas.","Um time que queria tirar a Netskope por problemas com DLP ficou meses sem responder e depois foi substituído. Abri com um health check para o time novo e seguimos juntos: mais da metade das licenças em uso em seis semanas.")},
+    {h:L("A budget cut turned into ZTNA","Un recorte de presupuesto convertido en ZTNA","Um corte de orçamento convertido em ZTNA"),
+     t:L("When budgets were cut, I ran a value QBR and proposed a licence exchange: instead of dropping half their SWG licences, the customer kept the budget and moved it into ZTNA.","Ante recortes de presupuesto, presentaba un QBR de valor y proponía un license exchange: en vez de quitar la mitad de las licencias de SWG, el cliente mantuvo el presupuesto y lo pasó a ZTNA.","Diante de cortes de orçamento, apresentava um QBR de valor e propunha um license exchange: em vez de cortar metade das licenças de SWG, o cliente manteve o orçamento e o levou para ZTNA.")},
+    {h:L("Holding off a Microsoft consolidation","Frenar una consolidación con Microsoft","Segurar uma consolidação com a Microsoft"),
+     t:L("A Microsoft-centric customer, after nearly two years of feeling unsupported, planned to move its web gateway to Microsoft. I showed the value already inside their licence tier; they paused the move and gave us time to prove it.","Un cliente centrado en Microsoft, tras casi dos años sintiéndose sin respaldo, planeaba pasar su web gateway a Microsoft. Les mostré el valor que ya tenían en su nivel de licencia; frenaron el cambio y nos dieron tiempo para demostrarlo.","Um cliente centrado na Microsoft, depois de quase dois anos se sentindo sem suporte, planejava mover seu web gateway para a Microsoft. Mostrei o valor que já havia no nível de licença deles; pausaram a mudança e nos deram tempo para provar.")},
+    {h:L("DLP that people could actually tune","Un DLP que de verdad se pudiera afinar","Um DLP que dava para ajustar de verdade"),
+     t:L("Customers found DLP false positives impossible to tune. I showed a gradual tuning path through the console and tracked the progress at every cadence call with Advanced Analytics dashboards.","Los clientes sentían imposible afinar los falsos positivos de DLP. Les mostré un camino de ajuste gradual en la consola y medí el avance en cada cadencia con dashboards de Advanced Analytics.","Os clientes achavam impossível ajustar os falsos positivos de DLP. Mostrei um caminho de ajuste gradual no console e medi o progresso em cada cadência com dashboards de Advanced Analytics.")},
+    {h:L("Rollouts stuck for lack of people","Despliegues frenados por falta de gente","Implantações travadas por falta de gente"),
+     t:L("My hardest pattern. I answered it with detailed KB guides, quarterly enablement sessions packed with what they needed next, and Professional Services where the account allowed it.","Mi patrón más difícil. Lo enfrenté con guías KB detalladas, sesiones trimestrales cargadas de lo que necesitaban después, y Professional Services donde la cuenta lo permitía.","Meu padrão mais difícil. Enfrentei com guias KB detalhados, sessões trimestrais cheias do que precisavam a seguir, e Professional Services quando a conta permitia.")},
+    {h:L("A support backlog before a rollout","Casos atrasados justo antes de un rollout","Casos atrasados logo antes de um rollout"),
+     t:L("An account about to roll out had a pile of stalled cases. I took it to the director of support, and set an AI agent to alert me on every case update or whenever a case sat idle too long.","Una cuenta a punto de hacer rollout tenía muchos casos atrasados. Lo llevé al director de soporte y configuré un agente de IA que me avisaba de cada interacción o cuando un caso quedaba inactivo demasiado tiempo.","Uma conta prestes a fazer rollout tinha muitos casos atrasados. Levei ao diretor de suporte e configurei um agente de IA que me avisava de cada interação ou quando um caso ficava parado tempo demais.")},
+    {h:L("A CVE, handled before it spread","Un CVE, contenido antes de escalar","Um CVE, contido antes de escalar"),
+     t:L("When a CVE dropped, I sent every account the steps to take. One applied them late and had a couple of endpoints compromised, but because the team already knew the playbook, it went no further.","Cuando salió un CVE, envié a todas mis cuentas los pasos a seguir. Una los aplicó tarde y tuvo un par de endpoints comprometidos, pero como el equipo ya conocía el procedimiento, no pasó a mayores.","Quando saiu um CVE, enviei a todas as minhas contas os passos a seguir. Uma aplicou tarde e teve alguns endpoints comprometidos, mas como o time já conhecia o procedimento, não passou disso.")},
+    {h:L("Expansion that followed value","Expansión que siguió al valor","Expansão que seguiu o valor"),
+     t:L("Upsold SkopeAI; Advanced Analytics with retention raised from 7 days to 3 months; and DLP Standard to Advanced for more predefined identifiers and OCR. Also put PDEM on the table to cut time to detect network problems.","Upsell de SkopeAI; de Advanced Analytics con la retención subida de 7 días a 3 meses; y de DLP Standard a Advanced por más identificadores predefinidos y OCR. También puse PDEM sobre la mesa para reducir el tiempo de detección de problemas de red.","Upsell de SkopeAI; de Advanced Analytics com a retenção ampliada de 7 dias para 3 meses; e de DLP Standard para Advanced por mais identificadores predefinidos e OCR. Também coloquei o PDEM na mesa para reduzir o tempo de detecção de problemas de rede.")}
+  ]
+};
+
+var GUIDE = {
+  tech:[
+    {n:L("Network security","Seguridad de redes","Segurança de redes"), i:L("FortiGate and FortiOS • high availability • SD-WAN • IPsec and FortiClient VPN • routing and failover • VoIP","FortiGate y FortiOS • alta disponibilidad • SD-WAN • VPN IPsec y FortiClient • enrutamiento y failover • VoIP","FortiGate e FortiOS • alta disponibilidade • SD-WAN • VPN IPsec e FortiClient • roteamento e failover • VoIP")},
+    {n:L("Secure access (SSE)","Acceso seguro (SSE)","Acesso seguro (SSE)"), i:L("Netskope SWG • ZTNA • Real-Time Protection policy • DSPM and AI security POCs • MDM rollout with Intune and Iru","Netskope SWG • ZTNA • políticas de Real-Time Protection • POCs de DSPM y seguridad de IA • despliegue MDM con Intune e Iru","Netskope SWG • ZTNA • políticas de Real-Time Protection • POCs de DSPM e segurança de IA • implantação MDM com Intune e Iru")},
+    {n:L("Cloud","Nube","Nuvem"), i:L("FortiGate HA in AWS and Azure • reproducible test environments with Terraform","FortiGate HA en AWS y Azure • entornos de prueba reproducibles con Terraform","FortiGate HA em AWS e Azure • ambientes de teste reproduzíveis com Terraform")},
+    {n:L("Identity and access","Identidad y acceso","Identidade e acesso"), i:L("Cisco ISE • 802.1X • Cisco WLC • FortiAP")},
+    {n:L("Detection","Detección","Detecção"), i:L("FortiSIEM and Cisco ISE log analysis • SNMP, NetFlow and Syslog into SIEMs","Análisis de logs de FortiSIEM y Cisco ISE • SNMP, NetFlow y Syslog hacia SIEMs","Análise de logs de FortiSIEM e Cisco ISE • SNMP, NetFlow e Syslog para SIEMs")},
+    {n:L("Offensive security (lab)","Seguridad ofensiva (laboratorio)","Segurança ofensiva (laboratório)"), i:L("Active Directory attack chains to Enterprise Admin • Burp Suite • three full pentest reports","Cadenas de ataque en Active Directory hasta Enterprise Admin • Burp Suite • tres reportes de pentest completos","Cadeias de ataque em Active Directory até Enterprise Admin • Burp Suite • três relatórios de pentest completos")},
+    {n:L("Scripting","Scripting","Scripting"), i:L("Python • Bash • reads JavaScript and PHP • API integrations with Postman","Python • Bash • lectura de JavaScript y PHP • integraciones de APIs con Postman","Python • Bash • leitura de JavaScript e PHP • integrações de APIs com Postman")}
+  ],
+  cust:[
+    {n:L("Account plans","Planes de cuenta","Planos de conta"), i:L("30-60-90 day execution plans mapped to each customer's objectives","Planes de ejecución a 30-60-90 días alineados con los objetivos de cada cliente","Planos de execução de 30-60-90 dias alinhados aos objetivos de cada cliente")},
+    {n:L("Business reviews","Revisiones de negocio","Revisões de negócio"), i:L("QBRs and quarterly reporting in English, Spanish and Portuguese","QBRs y reportes trimestrales en inglés, español y portugués","QBRs e relatórios trimestrais em inglês, espanhol e português")},
+    {n:L("Adoption","Adopción","Adoção"), i:L("Utilisation recovery • SWG and ZTNA from rollout to adoption • KB articles and how-to guides","Recuperación de utilización • SWG y ZTNA desde el despliegue hasta la adopción • artículos de KB y guías","Recuperação de utilização • SWG e ZTNA do rollout à adoção • artigos de KB e guias")},
+    {n:L("Executive evidence","Evidencia para ejecutivos","Evidência para executivos"), i:L("Log and event data turned into board-level compliance evidence for SOC 2, ISO 27001 and PCI-DSS","Datos de logs y eventos convertidos en evidencia de cumplimiento para la junta: SOC 2, ISO 27001 y PCI-DSS","Dados de logs e eventos transformados em evidência de conformidade para a diretoria: SOC 2, ISO 27001 e PCI-DSS")},
+    {n:L("Enablement","Formación de clientes","Capacitação de clientes"), i:L("Webinars on new platform technology • threat-led configuration workshops","Webinars sobre tecnología nueva de la plataforma • talleres de configuración guiados por amenazas reales","Webinars sobre novas tecnologias da plataforma • workshops de configuração guiados por ameaças reais")},
+    {n:L("Partners","Partners","Parceiros"), i:L("Co-planned proposals and health checks with Cloudrise, AccessIT Group, CDW and Deloitte across NAM and LATAM","Propuestas y health checks planeados con Cloudrise, AccessIT Group, CDW y Deloitte en NAM y LATAM","Propostas e health checks planejados com Cloudrise, AccessIT Group, CDW e Deloitte em NAM e LATAM")},
+    {n:L("Team and tools","Equipo y herramientas","Equipe e ferramentas"), i:L("Led new CSM hires through onboarding and ramp, without a formal reporting line • Salesforce and Gainsight","Guié a los nuevos CSM en su onboarding y arranque, sin una línea formal de reporte • Salesforce y Gainsight","Guiei os novos CSMs no onboarding e na rampa, sem linha formal de reporte • Salesforce e Gainsight")}
+  ]
+};
+
+var FACTS = [
+  L("<strong>English</strong> full professional • <strong>Spanish</strong> native • <strong>Portuguese</strong> full professional • <strong>French</strong> limited working","<strong>Inglés</strong> profesional completo • <strong>Español</strong> nativo • <strong>Portugués</strong> profesional completo • <strong>Francés</strong> nivel básico de trabajo","<strong>Inglês</strong> profissional completo • <strong>Espanhol</strong> nativo • <strong>Português</strong> profissional completo • <strong>Francês</strong> nível básico de trabalho"),
+  L("Based in Colombia • current US visa, available for on-site visits • willing to travel, including internationally","Vivo en Colombia • visa de EE. UU. vigente, disponible para visitas presenciales • dispuesto a viajar, también fuera del país","Moro na Colômbia • visto dos EUA válido, disponível para visitas presenciais • disposto a viajar, inclusive internacionalmente")
+];
+
+var COLORS = {tech:"var(--tech)", cust:"var(--cust)", cert:"var(--cert)", depot:"var(--muted)"};
+var lang = "en", current = "netskope";
+var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var mobileMQ = window.matchMedia("(max-width:760px)");
+
+function el(tag, cls, text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;}
+function bullets(lines, small){
+  var b=el("span","bullets");
+  lines.forEach(function(l){var s=el("span","bullet"+(l==="cert"?" hollow":"")); s.style.setProperty("--c",COLORS[l]); b.appendChild(s);});
+  return b;
+}
+function tierTag(t){return el("span","tier "+t, T[lang]["tier_"+t]);}
+
+function renderBoard(){
+  var st=S[current], board=document.getElementById("board");
+  var bb=document.getElementById("board-bullets"); bb.replaceWith(bullets(st.lines)); bb=board.querySelector(".board-band .bullets"); bb.id="board-bullets";
+  document.getElementById("board-name").textContent=st.name[lang];
+  var body=document.getElementById("board-body"); body.textContent="";
+  var head=el("div"); head.appendChild(el("div","board-title",st.title[lang])); head.appendChild(el("div","board-when",st.when[lang])); body.appendChild(head);
+  if(st.value) body.appendChild(el("p","board-value",T[lang][st.value]));
+  if(st.terminus){
+    body.appendChild(el("p",null,T[lang].terminusText));
+    var a=el("a","btn",T[lang].terminusCta); a.href="#contact"; a.style.cssText="justify-self:start;background:var(--ink);color:var(--ground);border-color:var(--ink)"; body.appendChild(a);
+  }
+  var total=0, shown=0, LIMIT=3;
+  st.groups.forEach(function(g){total+=g.proofs.length;});
+  st.groups.forEach(function(g){
+    if(!expanded && shown>=LIMIT) return;
+    var wrap=el("div");
+    var oneTier=g.proofs.every(function(pr){return pr.tier===g.proofs[0].tier;});
+    var h=el("div","group-head");
+    if(g.head) h.appendChild(el("span",null,T[lang][g.head]));
+    if(g.line){h.appendChild(bullets([g.line])); h.appendChild(el("span",null,T[lang][g.line==="tech"?"legTech":"legCust"]));}
+    if(oneTier) h.appendChild(tierTag(g.proofs[0].tier));
+    if(h.childNodes.length) wrap.appendChild(h);
+    var ul=el("ul","proofs");
+    g.proofs.forEach(function(pr){
+      if(!expanded && shown>=LIMIT) return;
+      var li=el("li"); if(!oneTier) li.appendChild(tierTag(pr.tier)); li.appendChild(el("span",null,pr.t[lang])); ul.appendChild(li); shown++;
+    });
+    wrap.appendChild(ul); body.appendChild(wrap);
+  });
+  if(total>LIMIT){
+    var more=el("button","more",expanded?T[lang].showLess:T[lang].showAll.replace("{n}",total));
+    more.type="button"; more.setAttribute("aria-expanded",String(expanded));
+    more.addEventListener("click",function(){expanded=!expanded; renderBoard();});
+    body.appendChild(more);
+  }
+}
+var expanded=false;
+
+function renderStatic(){
+  document.querySelectorAll("[data-i18n]").forEach(function(n){var k=n.getAttribute("data-i18n"); if(T[lang][k]!=null) n.textContent=T[lang][k];});
+  document.querySelectorAll("[data-i18n-html]").forEach(function(n){n.innerHTML=T[lang][n.getAttribute("data-i18n-html")];});
+  var rb=document.getElementById("record-body"); rb.textContent="";
+  RECORD.forEach(function(r){
+    var tr=el("tr");
+    tr.appendChild(el("td","res",r.res[lang])); tr.appendChild(el("td","where",r.where));
+    var tl=el("td","line"); tl.appendChild(bullets(r.lines)); tl.title=r.lines.map(function(l){return l==="tech"?T[lang].legTech:l==="cust"?T[lang].legCust:T[lang].certTitle;}).join(" • "); tr.appendChild(tl);
+    var ts=el("td"); ts.appendChild(tierTag(r.tier)); tr.appendChild(ts);
+    rb.appendChild(tr);
+  });
+  ["tech","cust"].forEach(function(k){
+    var ul=document.getElementById("guide-"+k); ul.textContent="";
+    GUIDE[k].forEach(function(g){var li=el("li"); li.appendChild(el("span","stop-name",g.n[lang])); li.appendChild(el("span","stop-items",g.i[lang])); ul.appendChild(li);});
+  });
+  var sk=document.getElementById("skills"); sk.textContent="";
+  SKILLS.forEach(function(g){
+    var col=el("div","skill-group"); col.appendChild(el("h3",null,g.n[lang]));
+    var ul=el("ul",g.items.length>10?"chips":"skill-list");
+    g.items.forEach(function(it){ul.appendChild(el("li",null,it[lang]));});
+    col.appendChild(ul); sk.appendChild(col);
+  });
+  ["hands","lab"].forEach(function(tier){
+    var st=document.getElementById("stack-"+tier); st.textContent="";
+    STACK.filter(function(g){return g.tier===tier;}).forEach(function(g){
+      var col=el("div","skill-group"); col.appendChild(el("h4",null,g.n[lang]));
+      var ul=el("ul","chips "+tier);
+      g.items.forEach(function(it){ul.appendChild(el("li",null,it));});
+      col.appendChild(ul); st.appendChild(col);
+    });
+  });
+  document.getElementById("machines-link").href="machines.html?lang="+lang;
+  [["support","cases-support"],["csm","cases-csm"]].forEach(function(k){
+    var ol=document.getElementById(k[1]); ol.textContent="";
+    CASES[k[0]].forEach(function(c){var li=el("li"); li.appendChild(el("h4",null,c.h[lang])); li.appendChild(el("p",null,c.t[lang])); ol.appendChild(li);});
+  });
+  var ca=document.getElementById("cases-support-also"); ca.textContent="";
+  CASES.supportAlso.forEach(function(x){ca.appendChild(el("li",null,x));});
+  var lb=document.getElementById("log-body"); lb.textContent="";
+  LOG.forEach(function(r){var tr=el("tr"); tr.appendChild(el("td","where",r.when[lang])); tr.appendChild(el("td","res",r.work[lang])); var ts=el("td","scale",r.scale[lang]); tr.appendChild(ts); lb.appendChild(tr);});
+  var dl=document.getElementById("depot-list"); dl.textContent="";
+  var bay=0;
+  S.depot.groups.forEach(function(g){
+    if(g.head){var hl=el("li","bay-head"); hl.appendChild(el("span","bay","")); var hs=el("span"); hs.appendChild(el("strong",null,T[lang][g.head])); if(g.repo){var ra=el("a","repo-link",T[lang].depotRepo+" ↗"); ra.href=g.repo; ra.target="_blank"; ra.rel="noopener"; hs.appendChild(ra);} hl.appendChild(hs); dl.appendChild(hl);}
+    g.proofs.forEach(function(pr){bay++; var li=el("li"); li.appendChild(el("span","bay","BAY "+bay)); li.appendChild(el("span",null,pr.t[lang])); dl.appendChild(li);});
+  });
+  var fl=document.getElementById("facts"); fl.textContent="";
+  FACTS.forEach(function(f){var li=el("li"); li.innerHTML=f[lang]; fl.appendChild(li);});
+  document.documentElement.lang=lang;
+  document.querySelectorAll(".langs:not(.modes) button").forEach(function(b){b.setAttribute("aria-pressed", String(b.dataset.lang===lang));});
+  renderBoard();
+}
+
+function setLang(l, animate){
+  if(!T[l] || (l===lang && animate)) return;
+  try{localStorage.setItem("ja-lang",l);}catch(e){}
+  if(!animate || reduce){lang=l; renderStatic(); return;}
+  document.body.classList.add("flipping");
+  setTimeout(function(){lang=l; renderStatic();},140);
+  setTimeout(function(){document.body.classList.remove("flipping");},340);
+}
+
+/* ---------- train along the line ---------- */
+var train=document.getElementById("train");
+var paths={tech:document.getElementById("p-tech"),cert:document.getElementById("p-cert"),depot:document.getElementById("p-depot")};
+var POS={unimag:["tech",90,330],sykes:["tech",270,330],fortinet:["tech",470,330],netskope:["tech",720,330],terminus:["tech",1110,330],depot:["depot",900,482],ccna:["cert",520,120],nse:["cert",700,120],oscp:["cert",880,120],crte:["cert",1060,120]};
+function lenAt(path,x,y){var total=path.getTotalLength(),best=0,bd=1e9;for(var s=0;s<=total;s+=2){var pt=path.getPointAtLength(s),d=(pt.x-x)*(pt.x-x)+(pt.y-y)*(pt.y-y);if(d<bd){bd=d;best=s;}}return best;}
+var LEN={}; Object.keys(POS).forEach(function(k){var p=POS[k]; LEN[k]=lenAt(paths[p[0]],p[1],p[2]);});
+var tState={path:"tech",len:LEN.netskope}, raf=0;
+function place(pathKey,len){var pt=paths[pathKey].getPointAtLength(len); train.setAttribute("transform","translate("+pt.x+" "+pt.y+")");}
+function moveTrain(id){
+  var target=POS[id]; if(!target) return;
+  var pk=target[0], to=LEN[id];
+  var from = (pk===tState.path) ? tState.len : 0;
+  cancelAnimationFrame(raf);
+  if(reduce){tState={path:pk,len:to}; place(pk,to); return;}
+  var dist=Math.abs(to-from), dur=Math.min(1100,320+dist*1.1), t0=performance.now();
+  (function step(now){
+    var k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,4), l=from+(to-from)*e;
+    place(pk,l); tState={path:pk,len:l};
+    if(k<1) raf=requestAnimationFrame(step);
+  })(t0);
+}
+
+/* ---------- selection ---------- */
+var board=document.getElementById("board"), boardHome=document.getElementById("board-home");
+function placeBoard(){
+  if(mobileMQ.matches){
+    var btn=document.querySelector('.st-btn[data-station="'+current+'"]');
+    if(btn) btn.insertAdjacentElement("afterend",board);
+    board.style.display="block";
+  } else {
+    boardHome.appendChild(board); board.style.display="";
+  }
+}
+function select(id, opts){
+  opts=opts||{};
+  if(id!==current) expanded=false;
+  current=id;
+  document.querySelectorAll("[data-station]").forEach(function(n){n.setAttribute("aria-pressed",String(n.getAttribute("data-station")===id));});
+  renderBoard(); placeBoard();
+  if(!opts.silent) moveTrain(id);
+  if(id==="terminus" && !opts.silent && !mobileMQ.matches){ /* leave the board up; the CTA links on */ }
+}
+document.querySelectorAll("[data-station]").forEach(function(n){
+  n.addEventListener("click",function(){select(n.getAttribute("data-station"));});
+  if(n.tagName.toLowerCase()==="g"){
+    n.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault(); select(n.getAttribute("data-station"));}});
+    var st=S[n.getAttribute("data-station")]; if(st) n.setAttribute("aria-label", st.name.en);
+  }
+});
+document.querySelectorAll(".langs:not(.modes) button").forEach(function(b){b.addEventListener("click",function(){setLang(b.dataset.lang,true);});});
+function setMode(m, scroll){
+  document.documentElement.setAttribute("data-mode",m);
+  document.querySelectorAll(".modes button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.mode===m));});
+  try{localStorage.setItem("ja-mode",m);}catch(e){}
+  if(scroll){var t=document.getElementById("cases-h"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"});}
+}
+document.querySelectorAll(".modes button").forEach(function(b){b.addEventListener("click",function(){setMode(b.dataset.mode,false);});});
+document.getElementById("cta-full").addEventListener("click",function(){setMode("full",true);});
+setMode(document.documentElement.getAttribute("data-mode")||"exec",false);
+document.getElementById("terminus-link").addEventListener("click",function(){moveTrain("terminus");});
+if(mobileMQ.addEventListener) mobileMQ.addEventListener("change",placeBoard);
+
+/* ---------- copy email ---------- */
+document.getElementById("copy-email").addEventListener("click",function(){
+  var out=document.getElementById("copied"), addr="josealejandroa99@gmail.com";
+  function ok(){out.textContent=T[lang].copied; setTimeout(function(){out.textContent="";},2200);}
+  function fail(){var r=document.createRange(); r.selectNodeContents(document.getElementById("email")); var s=getSelection(); s.removeAllRanges(); s.addRange(r); out.textContent=T[lang].copyFail;}
+  try{ if(navigator.clipboard && navigator.clipboard.writeText){navigator.clipboard.writeText(addr).then(ok,fail);} else fail(); }catch(e){fail();}
+});
+
+/* ---------- boot ---------- */
+var initial="en";
+try{var q=new URLSearchParams(location.search).get("lang"); var saved=localStorage.getItem("ja-lang");
+  if(q && T[q]) initial=q; else if(saved && T[saved]) initial=saved;
+  else {var nl=(navigator.language||"en").slice(0,2); if(T[nl]) initial=nl;}
+}catch(e){}
+lang=initial; renderStatic(); select("netskope",{silent:true}); place("tech",LEN.netskope);
+})();
+</script>
+
+</body>
+</html>
