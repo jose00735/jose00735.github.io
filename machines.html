@@ -6,34 +6,37 @@
 <title>Practice Machines – Jose Acosta Hernandez</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Overpass+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
 :root{
-  --ground:#f4f4ef; --ink:#15191c; --muted:#4a5459; --rule:#cfcfc6; --cert:#0c7f48; --on-line:#ffffff; --focus:#b35c00;
-  --body:"Overpass",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"Overpass Mono",ui-monospace,Consolas,monospace;
+  --ground:#f4f4f2; --ink:#141414; --muted:#5a5a5a; --rule:#d8d8d8; --cert:#a87f00; --cust:#c84727; --on-line:#141414; --focus:#265bff;
+  --body:"Hanken Grotesk","Helvetica Neue",Arial,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){--ground:#0b1a33;--ink:#eaeef5;--muted:#a9b8cf;--rule:#26395c;--cert:#45c886;--on-line:#0b1a33;--focus:#ffc233;color-scheme:dark}
+  :root:not([data-theme="light"]){--ground:#141414;--ink:#f4f4f2;--muted:#b9b9b9;--rule:#333333;--cert:#ffcb06;--cust:#fa582d;--on-line:#141414;--focus:#00c0e8;color-scheme:dark}
 }
-:root[data-theme="dark"]{--ground:#0b1a33;--ink:#eaeef5;--muted:#a9b8cf;--rule:#26395c;--cert:#45c886;--on-line:#0b1a33;--focus:#ffc233;color-scheme:dark}
+:root[data-theme="dark"]{--ground:#141414;--ink:#f4f4f2;--muted:#b9b9b9;--rule:#333333;--cert:#ffcb06;--cust:#fa582d;--on-line:#141414;--focus:#00c0e8;color-scheme:dark}
 *{box-sizing:border-box}
 html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.55;-webkit-font-smoothing:antialiased}
 .wrap{max-width:75rem;margin:0 auto;padding-inline:max(1rem,4vw);padding-block:2rem 4rem}
 a{color:inherit;text-underline-offset:.2em}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-.back{font-weight:700;font-size:.95rem}
-.sign{margin:1.5rem 0 0;background:var(--cert);color:var(--on-line);font-size:clamp(1.5rem,3vw,2rem);font-weight:800;line-height:1.2;padding:.6rem 1rem;border-radius:.2rem;display:flex;align-items:center;gap:.7rem}
-.sign i{width:1.05rem;height:1.05rem;border-radius:50%;box-shadow:inset 0 0 0 .22rem var(--on-line);flex:none}
+.back{font-weight:700;font-size:.95rem;display:inline-flex;align-items:center;gap:.4rem}
+.arr{width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.sign{margin:1.5rem 0 0;color:var(--ink);font-size:clamp(1.9rem,4.4vw,2.6rem);font-weight:600;letter-spacing:-.025em;line-height:1.1;padding:1.1rem 0 0;position:relative;display:flex;align-items:center;gap:.7rem}
+.sign::before{content:"";position:absolute;left:0;top:0;width:3rem;height:4px;background:var(--cert)}
+.sign i{width:1.05rem;height:1.05rem;border-radius:50%;box-shadow:inset 0 0 0 .22rem var(--cert);flex:none}
 .intro{color:var(--muted);max-width:62ch;margin:1rem 0 0}
-.totals{display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;margin:1.5rem 0 0;padding:0;list-style:none;font:600 .9rem/1.3 var(--mono)}
-.totals b{font-size:1.6rem;font-family:var(--body);font-weight:800;margin-right:.35rem}
+.totals{display:flex;flex-wrap:wrap;gap:.5rem 1.75rem;margin:1.5rem 0 0;padding:0;list-style:none;font:600 .9rem/1.3 var(--body);color:var(--muted)}
+.totals b{color:var(--ink)}
+.totals b{font-size:1.75rem;font-family:var(--body);font-weight:700;margin-right:.35rem}
 .controls{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center;margin:1.75rem 0 1rem;padding-bottom:1rem;border-bottom:3px solid var(--ink)}
 .seg{display:flex;flex-wrap:wrap;gap:.4rem}
 .seg button{font:600 .85rem/1 var(--body);color:var(--ink);background:transparent;border:0;box-shadow:inset 0 0 0 .12rem var(--cert);border-radius:999px;padding:.55rem .85rem;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--cert);color:var(--on-line)}
-.search{font:500 .95rem/1 var(--body);color:var(--ink);background:transparent;border:0;box-shadow:inset 0 0 0 .12rem var(--muted);border-radius:.3rem;padding:.6rem .8rem;min-width:0;width:15rem;max-width:100%}
+.search{font:500 .95rem/1 var(--body);color:var(--ink);background:transparent;border:0;box-shadow:inset 0 0 0 .12rem var(--muted);border-radius:999px;padding:.6rem 1rem;min-width:0;width:15rem;max-width:100%}
 .grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,13.5rem),1fr));gap:0 1.5rem}
 .grid li{display:flex;justify-content:space-between;gap:.75rem;align-items:baseline;padding:.6rem 0;border-bottom:1px solid var(--rule)}
 .grid .n{font-weight:600}
@@ -45,7 +48,7 @@ a{color:inherit;text-underline-offset:.2em}
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="index.html" id="back">← Jose Acosta Hernandez</a>
+  <a class="back" href="index.html" id="back"><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M17 10H4M9 5l-5 5 5 5"/></svg>Jose Acosta Hernandez</a>
   <h1 class="sign"><i aria-hidden="true"></i><span data-t="title">Practice machines</span></h1>
   <p class="intro" data-t="intro">Every retired or public practice machine I worked through while preparing for the offensive certifications. Names only: no write-ups, and no exam or Pro Lab hosts.</p>
   <ul class="totals" id="totals"></ul>
