@@ -1062,7 +1062,7 @@ function renderStatic(){
   var dl=document.getElementById("depot-list"); dl.textContent="";
   var bay=0;
   S.depot.groups.forEach(function(g){
-    if(g.head){var hl=el("li","bay-head"); hl.appendChild(el("span","bay","")); var hs=el("span"); hs.appendChild(el("strong",null,T[lang][g.head])); if(g.repo){var ra=el("a","repo-link",T[lang].depotRepo+" ↗"); ra.href=g.repo; ra.target="_blank"; ra.rel="noopener"; hs.appendChild(ra);} hl.appendChild(hs); dl.appendChild(hl);}
+    if(g.head){var hl=el("li","bay-head"); hl.appendChild(el("span","bay","")); var hs=el("span"); hs.appendChild(el("strong",null,T[lang][g.head])); if(g.repo){var ra=el("a","repo-link",T[lang].depotRepo); ra.insertAdjacentHTML("beforeend",'<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7 6h7v7"/></svg>'); ra.href=g.repo; ra.target="_blank"; ra.rel="noopener"; hs.appendChild(ra);} hl.appendChild(hs); dl.appendChild(hl);}
     g.proofs.forEach(function(pr){bay++; var li=el("li"); li.appendChild(el("span","bay","BAY "+bay)); li.appendChild(el("span",null,pr.t[lang])); dl.appendChild(li);});
   });
   var fl=document.getElementById("facts"); fl.textContent="";
