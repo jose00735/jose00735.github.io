@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<script>(function(){var t="dark";try{var q=new URLSearchParams(location.search).get("theme");var s=localStorage.getItem("ja-theme");if(q==="light"||q==="dark")t=q;else if(s==="light")t="light";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
 /* Layout: career transit map in an enterprise-security vendor language: near-black bands, off-white reading sections, signal orange actions. */
 :root{
@@ -91,6 +92,11 @@ h4{text-wrap:balance}
 .ident-name{font:700 1.15rem/1.1 var(--display);letter-spacing:.01em}
 .ident-role{font-size:var(--step--1);opacity:.85}
 .top-right{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.75rem 1.25rem}
+.theme-btn{appearance:none;display:inline-grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:999px;border:1px solid color-mix(in srgb,var(--sign-fg) 45%,transparent);background:transparent;color:var(--sign-fg);cursor:pointer;padding:0}
+.theme-btn:hover{background:color-mix(in srgb,var(--sign-fg) 18%,transparent)}
+.theme-btn svg{width:1.15rem;height:1.15rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .ic-moon{fill:currentColor;stroke:none}
+:root[data-theme="dark"] .theme-btn .ic-moon,:root[data-theme="light"] .theme-btn .ic-sun{display:none}
 .langs{display:flex;border:1px solid color-mix(in srgb,var(--sign-fg) 45%,transparent);border-radius:999px;overflow:hidden;padding:2px}
 .langs button{appearance:none;border:0;background:transparent;color:var(--sign-fg);font:600 var(--mono-value)/1 var(--mono);padding:.5rem .7rem;cursor:pointer;letter-spacing:.06em}
 .langs button{border-radius:999px}
@@ -371,6 +377,7 @@ footer .wrap{padding-block:1.1rem;display:flex;flex-wrap:wrap;justify-content:sp
         <button type="button" data-mode="exec" aria-pressed="true" data-i18n="modeExec">Executive</button>
         <button type="button" data-mode="full" aria-pressed="false" data-i18n="modeFull">Full detail</button>
       </div>
+      <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch to light mode"><svg class="ic-sun" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.2M10 16v2.2M1.8 10h2.2M16 10h2.2M4.2 4.2l1.6 1.6M14.2 14.2l1.6 1.6M4.2 15.8l1.6-1.6M14.2 5.8l1.6-1.6"/></svg><svg class="ic-moon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8Z"/></svg></button>
       <div class="langs" role="group" aria-label="Language">
         <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
         <button type="button" id="lang-es" data-lang="es" aria-pressed="false">ES</button>
@@ -1175,6 +1182,17 @@ try{var q=new URLSearchParams(location.search).get("lang"); var saved=localStora
   else {var nl=(navigator.language||"en").slice(0,2); if(T[nl]) initial=nl;}
 }catch(e){}
 lang=initial; renderStatic(); select("netskope",{silent:true}); place("tech",LEN.netskope);
+})();
+</script>
+<script>
+(function(){
+  var L={en:["Switch to light mode","Switch to dark mode"],es:["Cambiar a modo claro","Cambiar a modo oscuro"],pt:["Mudar para o modo claro","Mudar para o modo escuro"]};
+  var b=document.getElementById("theme-btn"); if(!b) return;
+  function cur(){return document.documentElement.getAttribute("data-theme")==="light"?"light":"dark";}
+  function label(){var lg=(document.documentElement.lang||"en").slice(0,2); var p=L[lg]||L.en; var t=cur()==="dark"?p[0]:p[1]; b.setAttribute("aria-label",t); b.title=t;}
+  b.addEventListener("click",function(){var n=cur()==="dark"?"light":"dark"; document.documentElement.setAttribute("data-theme",n); try{localStorage.setItem("ja-theme",n);}catch(e){} label();});
+  new MutationObserver(label).observe(document.documentElement,{attributes:true,attributeFilter:["lang","data-theme"]});
+  label();
 })();
 </script>
 

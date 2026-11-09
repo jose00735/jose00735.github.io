@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<script>(function(){var t="dark";try{var q=new URLSearchParams(location.search).get("theme");var s=localStorage.getItem("ja-theme");if(q==="light"||q==="dark")t=q;else if(s==="light")t="light";}catch(e){}document.documentElement.setAttribute("data-theme",t);})();</script>
 <style>
 :root{
   --ground:#f4f4f2; --ink:#141414; --muted:#5a5a5a; --rule:#d8d8d8; --cert:#a87f00; --cust:#c84727; --on-line:#141414; --focus:#265bff;
@@ -27,6 +28,13 @@ body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);
 .wrap{max-width:75rem;margin:0 auto;padding-inline:max(1rem,4vw);padding-block:2rem 4rem}
 a{color:inherit;text-underline-offset:.2em}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.top .theme-btn{--sign-fg:var(--ink)}
+.theme-btn{appearance:none;display:inline-grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:999px;border:1px solid color-mix(in srgb,var(--sign-fg) 45%,transparent);background:transparent;color:var(--sign-fg);cursor:pointer;padding:0}
+.theme-btn:hover{background:color-mix(in srgb,var(--sign-fg) 18%,transparent)}
+.theme-btn svg{width:1.15rem;height:1.15rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.theme-btn .ic-moon{fill:currentColor;stroke:none}
+:root[data-theme="dark"] .theme-btn .ic-moon,:root[data-theme="light"] .theme-btn .ic-sun{display:none}
 .back{font-weight:700;font-size:.95rem;display:inline-flex;align-items:center;gap:.4rem}
 .arr{width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .sign{margin:1.5rem 0 0;color:var(--ink);font-size:clamp(1.9rem,4.4vw,2.6rem);font-weight:600;letter-spacing:-.025em;line-height:1.1;padding:1.1rem 0 0;position:relative;display:flex;align-items:center;gap:.7rem}
@@ -52,7 +60,7 @@ a{color:inherit;text-underline-offset:.2em}
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="index.html" id="back"><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M17 10H4M9 5l-5 5 5 5"/></svg>Jose Acosta Hernandez</a>
+  <div class="top"><a class="back" href="index.html" id="back"><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M17 10H4M9 5l-5 5 5 5"/></svg>Jose Acosta Hernandez</a><button type="button" class="theme-btn" id="theme-btn" aria-label="Switch to light mode"><svg class="ic-sun" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.2M10 16v2.2M1.8 10h2.2M16 10h2.2M4.2 4.2l1.6 1.6M14.2 14.2l1.6 1.6M4.2 15.8l1.6-1.6M14.2 5.8l1.6-1.6"/></svg><svg class="ic-moon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8Z"/></svg></button></div>
   <h1 class="sign"><i aria-hidden="true"></i><span data-t="title">Practice machines</span></h1>
   <p class="intro" data-t="intro">Every retired or public practice machine I worked through while preparing for the offensive certifications. Names only: no write-ups, and no exam or Pro Lab hosts.</p>
   <ul class="totals" id="totals"></ul>
@@ -102,6 +110,17 @@ function render(){
   list.forEach(function(m){var l=el("li",m.status==="in-progress"?"prog":null); l.appendChild(el("span","n",m.name)); l.appendChild(el("span","m",m.platform+" • "+m.os)); l.title=m.track+(m.date?" • "+m.date:""); g.appendChild(l);});
 }
 render();
+})();
+</script>
+<script>
+(function(){
+  var L={en:["Switch to light mode","Switch to dark mode"],es:["Cambiar a modo claro","Cambiar a modo oscuro"],pt:["Mudar para o modo claro","Mudar para o modo escuro"]};
+  var b=document.getElementById("theme-btn"); if(!b) return;
+  function cur(){return document.documentElement.getAttribute("data-theme")==="light"?"light":"dark";}
+  function label(){var lg=(document.documentElement.lang||"en").slice(0,2); var p=L[lg]||L.en; var t=cur()==="dark"?p[0]:p[1]; b.setAttribute("aria-label",t); b.title=t;}
+  b.addEventListener("click",function(){var n=cur()==="dark"?"light":"dark"; document.documentElement.setAttribute("data-theme",n); try{localStorage.setItem("ja-theme",n);}catch(e){} label();});
+  new MutationObserver(label).observe(document.documentElement,{attributes:true,attributeFilter:["lang","data-theme"]});
+  label();
 })();
 </script>
 </body>
